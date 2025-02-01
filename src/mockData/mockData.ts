@@ -18,10 +18,6 @@ export const JSON: inputJSON = {
                     name: "id",
                     type: "integer"
                 },
-                {
-                    name: "department_id",
-                    type: "integer"
-                },
             ],
         },
     ],

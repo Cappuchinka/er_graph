@@ -64,6 +64,10 @@ const formatter: {
                     label: formatter.referenceTypeFormatter(ref.type)
                 }
             });
+            json.entities.find(entity => entity.name === ref.target.table)?.columns.push({
+                name: `${ref.target.field}`,
+                type: 'integer'
+            });
         });
 
         const elements: ElementDefinition[] = [];

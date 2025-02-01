@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
-import {Core, EdgeDefinition, ElementDefinition, NodeDefinition} from 'cytoscape';
+import { Core, ElementDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
-import {validateInputJSON} from "../utils/utils.ts";
+import { validateInputJSON } from '../utils/utils.ts';
 
 export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();

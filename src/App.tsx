@@ -1,26 +1,12 @@
 import React from 'react';
 import CytoscapeComponent from './components/CytoscapeComponent';
-import { ElementDefinition, Stylesheet, LayoutOptions } from 'cytoscape';
+import { Stylesheet, LayoutOptions } from 'cytoscape';
 import { JSON } from './mockData/mockData.ts';
-import { JSONToElementFormatter } from "./utils/useFormatter.ts";
+import { useFormatter } from "./utils/useFormatter.ts";
 
 const App: React.FC = () => {
-    const elements: ElementDefinition[] = [
-        { data: { id: 'user', label: 'User' }, classes: 'entity', grabbable: true },
-        { data: { id: 'order', label: 'Order' }, classes: 'entity', grabbable: true },
-
-        { data: { id: 'user_id', label: 'user_id (PK)', parent: 'user' }, classes: 'attribute', grabbable: false },
-        { data: { id: 'user_name', label: 'name', parent: 'user' }, classes: 'attribute', grabbable: false },
-        { data: { id: 'user_email', label: 'email', parent: 'user' }, classes: 'attribute', grabbable: false },
-        { data: { id: 'order_id', label: 'order_id (PK)', parent: 'order' }, classes: 'attribute', grabbable: false },
-        { data: { id: 'order_user_id', label: 'user_id (FK)', parent: 'order' }, classes: 'attribute', grabbable: false },
-
-        { data: { source: 'user_id', target: 'order_user_id', label: '1:N' } }
-    ];
-
+    const { JSONToElementFormatter } = useFormatter();
     const elements2 = JSONToElementFormatter(JSON);
-
-    console.log(elements2);
 
     const style: Stylesheet[] = [
         {

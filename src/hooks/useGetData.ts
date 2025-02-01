@@ -7,8 +7,10 @@ export const useGetData = () => {
 
     const containerRef = useRef<Core | null>(null);
     const [elements, setElements] = useState<ElementDefinition[]>([]);
+    const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const handleFileUpload = useCallback(() => {
+        setUpdateFlag(false);
         const jsonFileInput = document.getElementById('jsonFileInput') as HTMLInputElement;
         if (jsonFileInput.files && jsonFileInput.files.length > 0) {
             const file = jsonFileInput.files[0];
@@ -18,6 +20,7 @@ export const useGetData = () => {
                 try {
                     const parsedElements = JSON.parse(content);
                     setElements(JSONToElementFormatter(parsedElements));
+                    setUpdateFlag(true);
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
                 }
@@ -48,6 +51,7 @@ export const useGetData = () => {
         elements,
         containerRef,
         handleFileUpload,
-        handleJSONDownload
+        handleJSONDownload,
+        updateFlag
     }
 };

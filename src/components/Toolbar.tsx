@@ -8,11 +8,13 @@ import { cnMixSpace } from '@consta/uikit/MixSpace';
 export interface ToolbarProps {
     handleFileUpload: ReturnType<typeof useGetData>['handleFileUpload'];
     handleJSONDownload: ReturnType<typeof useGetData>['handleJSONDownload'];
+    updateFlag: ReturnType<typeof useGetData>['updateFlag'];
 }
 
 export const Toolbar = ({
     handleFileUpload,
-    handleJSONDownload
+    handleJSONDownload,
+    updateFlag
 }: ToolbarProps) => {
     return (
         <Layout
@@ -50,6 +52,7 @@ export const Toolbar = ({
                 </FileField>
 
                 <Button
+                    disabled={!updateFlag}
                     className={cnMixSpace({ mL: 's' })}
                     label="Скачать JSON"
                     onClick={() => {

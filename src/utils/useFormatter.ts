@@ -1,6 +1,6 @@
-import {Attribute, Classes, Edge, Entity} from '../types/elements.types.ts';
-import {inputJSON} from "../types/json.types.ts";
-import {ElementDefinition} from "cytoscape";
+import { Attribute, Classes, Edge, Entity } from '../types/elements.types.ts';
+import { inputJSON } from '../types/json.types.ts';
+import { ElementDefinition } from 'cytoscape';
 
 const formatter: {
     referenceTypeFormatter: (

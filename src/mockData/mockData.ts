@@ -1,6 +1,6 @@
-import { inputJSON } from '../types/json.types.ts';
+import { InputJSON } from '../types/json.types.ts';
 
-export const JSON: inputJSON = {
+export const JSON: InputJSON = {
     entities: [
         {
             name: "department",

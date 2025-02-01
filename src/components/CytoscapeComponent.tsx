@@ -1,18 +1,19 @@
 import { useEffect, useRef } from 'react';
-import cytoscape, { Core, ElementDefinition, Stylesheet, LayoutOptions } from 'cytoscape';
+import cytoscape, { Core, Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
+import { useGetData } from '../hooks/useGetData.ts';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
 
 export interface CytoscapeComponentProps {
-    elements: ElementDefinition[];
+    elements: ReturnType<typeof useGetData>['elements'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
 
-const CytoscapeComponent= ({
+const CytoscapeComponent = ({
    elements,
    style,
    layout

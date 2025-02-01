@@ -19,7 +19,7 @@ export interface ReferenceJSON {
     type: string;
 }
 
-export interface inputJSON {
+export interface InputJSON {
     entities: EntityJSON[];
     references: ReferenceJSON[];
 }

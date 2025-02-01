@@ -10,6 +10,7 @@ const App: React.FC = () => {
 
     return (
         <div>
+            <h1>Пример Cytoscape в React с TypeScript</h1>
             <CytoscapeComponent
                 elements={elements2}
                 style={STYLE}

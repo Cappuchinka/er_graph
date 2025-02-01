@@ -36,7 +36,15 @@ const CytoscapeComponent: React.FC<CytoscapeComponentProps> = ({ elements, style
         }
     }, [elements, style, layout]);
 
-    return <div ref={containerRef} style={{ width: '100%', height: '600px' }} />;
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                width: '100%',
+                height: '600px'
+            }}
+        />
+    );
 };
 
 export default CytoscapeComponent;

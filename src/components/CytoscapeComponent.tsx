@@ -1,17 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import cytoscape, { Core, ElementDefinition, Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { cnMixSpace } from '@consta/uikit/MixSpace';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
 
-interface CytoscapeComponentProps {
+export interface CytoscapeComponentProps {
     elements: ElementDefinition[];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
 
-const CytoscapeComponent: React.FC<CytoscapeComponentProps> = ({ elements, style, layout }) => {
+const CytoscapeComponent= ({
+   elements,
+   style,
+   layout
+}: CytoscapeComponentProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -40,9 +45,10 @@ const CytoscapeComponent: React.FC<CytoscapeComponentProps> = ({ elements, style
         <div
             ref={containerRef}
             style={{
-                width: '100%',
-                height: '600px'
+                width: '100vw',
+                height: '100vw'
             }}
+            className={cnMixSpace({ mH: 0, mV: 0, pH: 0, pV: 0 })}
         />
     );
 };

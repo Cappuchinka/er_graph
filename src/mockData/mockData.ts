@@ -1,4 +1,4 @@
-import {inputJSON} from "../types/json.types.ts";
+import { inputJSON } from '../types/json.types.ts';
 
 export const JSON: inputJSON = {
     entities: [

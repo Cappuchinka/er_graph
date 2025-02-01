@@ -31,6 +31,7 @@ export const validateInputJSON = (data: unknown) => {
     try {
         return InputJSONSchema.parse(data) !== null;
     } catch (error) {
+        console.error(error);
         return false;
     }
 }

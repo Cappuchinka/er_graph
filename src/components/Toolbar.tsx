@@ -2,18 +2,22 @@ import { Layout } from '@consta/uikit/Layout';
 import { Text } from '@consta/uikit/Text';
 import { FileField } from '@consta/uikit/FileField';
 import { Button } from '@consta/uikit/Button';
-import { useGetData } from "../hooks/useGetData.ts";
+import { useGetData } from '../hooks/useGetData.ts';
+import { cnMixSpace } from '@consta/uikit/MixSpace';
 
 export interface ToolbarProps {
     handleFileUpload: ReturnType<typeof useGetData>['handleFileUpload'];
+    handleJSONDownload: ReturnType<typeof useGetData>['handleJSONDownload'];
 }
 
 export const Toolbar = ({
-    handleFileUpload
+    handleFileUpload,
+    handleJSONDownload
 }: ToolbarProps) => {
     return (
         <Layout
             direction="column"
+            className={cnMixSpace({ mH: 'xs', mT: '2xs' })}
         >
             <Layout
                 style={{
@@ -33,6 +37,7 @@ export const Toolbar = ({
             
             <Layout
                 direction="row"
+                className={cnMixSpace({ mT: '2xs' })}
             >
                 <FileField
                     id="jsonFileInput"
@@ -43,6 +48,14 @@ export const Toolbar = ({
                 >
                     {(props) => <Button {...props} label="Загрузить JSON" />}
                 </FileField>
+
+                <Button
+                    className={cnMixSpace({ mL: 's' })}
+                    label="Скачать JSON"
+                    onClick={() => {
+                        handleJSONDownload()
+                    }}
+                />
             </Layout>
         </Layout>
     );

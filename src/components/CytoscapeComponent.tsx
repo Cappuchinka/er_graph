@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import cytoscape, { Core, Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
@@ -9,21 +9,23 @@ cytoscape.use(dagre);
 
 export interface CytoscapeComponentProps {
     elements: ReturnType<typeof useGetData>['elements'];
+    containerRef: ReturnType<typeof useGetData>['containerRef'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
 
 const CytoscapeComponent = ({
-   elements,
-   style,
-   layout
+    elements,
+    style,
+    layout,
+    containerRef
 }: CytoscapeComponentProps) => {
-    const containerRef = useRef<HTMLDivElement | null>(null);
+    // const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (containerRef.current) {
+        if (elements.length > 0) {
             const cy: Core = cytoscape({
-                container: containerRef.current,
+                container: document.getElementById('cy'),
                 elements: elements,
                 style: style,
                 layout: layout
@@ -35,16 +37,18 @@ const CytoscapeComponent = ({
                 console.log('Выбран узел:', node.data());
             });
 
+            containerRef.current = cy;
+
             // Очистка при размонтировании компонента
             return () => {
                 cy.destroy();
             };
         }
-    }, [elements, style, layout]);
+    }, [elements, style, layout, containerRef]);
 
     return (
         <div
-            ref={containerRef}
+            id="cy"
             style={{
                 width: '100vw',
                 height: '100vw'

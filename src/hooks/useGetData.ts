@@ -1,10 +1,11 @@
-import {useCallback, useState} from 'react';
-import { ElementDefinition } from 'cytoscape';
-import {useFormatter} from "../utils/useFormatter.ts";
+import { useCallback, useRef, useState } from 'react';
+import { Core, ElementDefinition } from 'cytoscape';
+import { useFormatter } from '../utils/useFormatter.ts';
 
 export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();
 
+    const containerRef = useRef<Core | null>(null);
     const [elements, setElements] = useState<ElementDefinition[]>([]);
 
     const handleFileUpload = useCallback(() => {
@@ -25,8 +26,28 @@ export const useGetData = () => {
         }
     }, [JSONToElementFormatter]);
 
+    const handleJSONDownload = useCallback(() => {
+        if (containerRef.current) {
+            const json = containerRef.current.json();
+            const jsonStr = JSON.stringify(json, null, 2); // Форматируем JSON для читаемости
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // Создаем ссылку для скачивания
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'graph.json'; // Имя файла
+            a.click();
+
+            // Освобождаем память
+            URL.revokeObjectURL(url);
+        }
+    }, []);
+
     return {
         elements,
-        handleFileUpload
+        containerRef,
+        handleFileUpload,
+        handleJSONDownload
     }
 };

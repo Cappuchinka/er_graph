@@ -1,6 +1,6 @@
 import { Attribute, Classes, Edge, Entity } from '../types/elements.types.ts';
 import { InputJSON } from '../types/json.types.ts';
-import { ElementDefinition } from 'cytoscape';
+import { ElementsDefinition } from 'cytoscape';
 
 const formatter: {
     referenceTypeFormatter: (
@@ -8,7 +8,7 @@ const formatter: {
     ) => string;
     JSONToElementFormatter: (
         json: InputJSON
-    ) => ElementDefinition[];
+    ) => ElementsDefinition;
 } = {
     referenceTypeFormatter: (type: string) => {
         let result = '';
@@ -70,16 +70,17 @@ const formatter: {
             });
         });
 
-        const elements: ElementDefinition[] = [];
+        const elements: ElementsDefinition = { nodes: [], edges: [] };
         entities.map(entity => {
-            elements.push(entity);
+            elements.nodes.push(entity);
         });
         attributes.map(attr => {
-            elements.push(attr);
+            elements.nodes.push(attr);
         });
         edges.map(edge => {
-            elements.push(edge);
+            elements.edges.push(edge);
         });
+        console.log(elements);
         return elements;
     }
 };

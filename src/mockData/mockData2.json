@@ -1,0 +1,207 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "user",
+          "label": "User"
+        },
+        "position": {
+          "x": 85.5,
+          "y": 200
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": "entity"
+      },
+      {
+        "data": {
+          "id": "order",
+          "label": "Order"
+        },
+        "position": {
+          "x": 306.5,
+          "y": 86
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": "entity"
+      },
+      {
+        "data": {
+          "id": "user_id",
+          "label": "user_id (PK)",
+          "parent": "user"
+        },
+        "position": {
+          "x": 85.5,
+          "y": 124
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": false,
+        "classes": "attribute"
+      },
+      {
+        "data": {
+          "id": "user_name",
+          "label": "name",
+          "parent": "user"
+        },
+        "position": {
+          "x": 85.5,
+          "y": 200
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": false,
+        "classes": "attribute"
+      },
+      {
+        "data": {
+          "id": "user_email",
+          "label": "email",
+          "parent": "user"
+        },
+        "position": {
+          "x": 85.5,
+          "y": 276
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": false,
+        "classes": "attribute"
+      },
+      {
+        "data": {
+          "id": "order_id",
+          "label": "order_id (PK)",
+          "parent": "order"
+        },
+        "position": {
+          "x": 306.5,
+          "y": 48
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": false,
+        "classes": "attribute"
+      },
+      {
+        "data": {
+          "id": "order_user_id",
+          "label": "user_id (FK)",
+          "parent": "order"
+        },
+        "position": {
+          "x": 306.5,
+          "y": 124
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": false,
+        "classes": "attribute"
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "source": "user_id",
+          "target": "order_user_id",
+          "label": "1:N",
+          "id": "7e761c56-bc76-4ab1-9a5c-d4a9b27a1d2f"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      }
+    ]
+  },
+  "style": [
+    {
+      "selector": "node.entity",
+      "style": {
+        "width": "150px",
+        "height": "40px",
+        "text-valign": "center",
+        "shape": "rectangle",
+        "border-width": "2px"
+      }
+    },
+    {
+      "selector": "node.attribute",
+      "style": {
+        "label": "data(label)",
+        "width": "120px",
+        "height": "25px",
+        "text-valign": "center",
+        "shape": "round-rectangle",
+        "border-width": "1px",
+        "border-color": "rgb(51,51,51)"
+      }
+    },
+    {
+      "selector": "edge",
+      "style": {
+        "label": "data(label)",
+        "curve-style": "bezier",
+        "target-arrow-shape": "triangle"
+      }
+    }
+  ],
+  "data": {},
+  "zoomingEnabled": true,
+  "userZoomingEnabled": true,
+  "zoom": 1.6736518640152707,
+  "minZoom": 1e-50,
+  "maxZoom": 1e+50,
+  "panningEnabled": true,
+  "userPanningEnabled": true,
+  "pan": {
+    "x": 291.5697582451364,
+    "y": 132.231804433657
+  },
+  "boxSelectionEnabled": true,
+  "renderer": {
+    "name": "canvas"
+  }
+}

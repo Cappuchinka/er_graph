@@ -27,7 +27,7 @@ export const useGetData = () => {
                         if (parsedElements.elements) {
                             const nodes = parsedElements.elements.nodes;
                             const edges = parsedElements.elements.edges;
-                            setElements(nodes.concat(edges));
+                            setElements({ nodes: nodes, edges: edges });
                             setUpdateFlag(true);
                         }
                     }

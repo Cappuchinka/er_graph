@@ -23,7 +23,7 @@ const CytoscapeComponent = ({
     // const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (elements.nodes.length > 0) {
+        if (elements.length > 0) {
             const cy: Core = cytoscape({
                 container: document.getElementById('cy'),
                 elements: elements,

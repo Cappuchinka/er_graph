@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { Core, ElementsDefinition } from 'cytoscape';
+import { Core, ElementDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { validateInputJSON } from '../utils/utils.ts';
 
@@ -7,7 +7,7 @@ export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();
 
     const containerRef = useRef<Core | null>(null);
-    const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
+    const [elements, setElements] = useState<ElementDefinition[]>([]);
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const handleFileUpload = useCallback(() => {

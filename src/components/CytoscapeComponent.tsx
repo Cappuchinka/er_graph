@@ -1,7 +1,11 @@
 import { useEffect, useRef } from 'react';
-import cytoscape, { Core, Stylesheet, LayoutOptions } from 'cytoscape';
+import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import cola from 'cytoscape-cola';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../hooks/useGetData.ts';
@@ -27,32 +31,34 @@ const CytoscapeComponent = ({
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        if (!containerRef.current) return;
+
         if (elements.nodes.length > 0) {
-            const cy: Core = cytoscape({
-                container: document.getElementById('cy'),
+            cyRef.current = cytoscape({
+                container: containerRef.current,
                 elements: elements,
                 style: style,
                 layout: layout
             });
 
             // Дополнительные настройки и обработчики событий
-            cy.on('tap', 'node', function(evt) {
+            cyRef.current.on('tap', 'node', function(evt) {
                 const node = evt.target;
                 console.log('Выбран узел:', node.data());
             });
 
-            cyRef.current = cy;
-
             // Очистка при размонтировании компонента
             return () => {
-                cy.destroy();
+                if (cyRef.current) {
+                    cyRef.current.destroy();
+                }
             };
         }
-    }, [elements, style, layout, containerRef]);
+    }, [elements, style, layout, containerRef, cyRef]);
 
     return (
         <div
-            id="cy"
+            ref={containerRef}
             style={{
                 width: '100vw',
                 height: '100vw'

@@ -5,7 +5,7 @@ import Toolbar from '../components/Toolbar.tsx';
 import { useGetData } from '../hooks/useGetData.ts';
 
 export const ERDiagramPage = () => {
-    const { elements, containerRef, handleFileUpload, handleJSONDownload, updateFlag } = useGetData();
+    const { elements, cyRef, handleFileUpload, handleJSONDownload, updateFlag } = useGetData();
 
     return (
         <Layout
@@ -17,7 +17,7 @@ export const ERDiagramPage = () => {
                 updateFlag={updateFlag}
             />
             <CytoscapeComponent
-                containerRef={containerRef}
+                cyRef={cyRef}
                 elements={elements}
                 style={STYLE}
                 layout={LAYOUT}

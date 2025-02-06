@@ -1,17 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import cytoscape, { Core, Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import cola from 'cytoscape-cola';
+import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../hooks/useGetData.ts';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
 cytoscape.use(cola);
+cytoscape.use(cytoscapeDomNode);
 
 export interface CytoscapeComponentProps {
     elements: ReturnType<typeof useGetData>['elements'];
-    containerRef: ReturnType<typeof useGetData>['containerRef'];
+    cyRef: ReturnType<typeof useGetData>['cyRef'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
@@ -20,9 +22,9 @@ const CytoscapeComponent = ({
     elements,
     style,
     layout,
-    containerRef
+    cyRef
 }: CytoscapeComponentProps) => {
-    // const containerRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (elements.nodes.length > 0) {
@@ -39,7 +41,7 @@ const CytoscapeComponent = ({
                 console.log('Выбран узел:', node.data());
             });
 
-            containerRef.current = cy;
+            cyRef.current = cy;
 
             // Очистка при размонтировании компонента
             return () => {

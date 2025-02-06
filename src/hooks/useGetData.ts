@@ -6,7 +6,7 @@ import { useFormatter } from '../utils/useFormatter.ts';
 export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();
 
-    const containerRef = useRef<Core | null>(null);
+    const cyRef = useRef<Core | null>(null);
     const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
@@ -43,9 +43,9 @@ export const useGetData = () => {
     }, [JSONToElementFormatter]);
 
     const handleJSONDownload = useCallback(() => {
-        if (containerRef.current) {
+        if (cyRef.current) {
             // TODO: подумать над обратным форматтером
-            const json = containerRef.current.json();
+            const json = cyRef.current.json();
             const jsonStr = JSON.stringify(json, null, 2); // Форматируем JSON для читаемости
             const blob = new Blob([jsonStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -63,7 +63,7 @@ export const useGetData = () => {
 
     return {
         elements,
-        containerRef,
+        cyRef,
         handleFileUpload,
         handleJSONDownload,
         updateFlag

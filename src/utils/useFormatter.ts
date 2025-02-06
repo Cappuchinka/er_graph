@@ -36,33 +36,30 @@ const formatter: {
         json.references.map(ref => {
             edges.push({
                 data: {
-                    source: `${ref.source.table}_${ref.source.field}`,
-                    target: `${ref.target.table}_${ref.target.field}`,
+                    source: `${ref.source.table}_${ref.source.field}`.toUpperCase(),
+                    target: `${ref.target.table}_${ref.target.field}`.toUpperCase(),
                     label: formatter.referenceTypeFormatter(ref.type)
                 }
-            });
-            json.entities.find(entity => entity.name === ref.target.table)?.columns.push({
-                name: `${ref.target.field}`,
-                type: 'integer'
             });
         });
 
         json.entities.map(entity => {
             entities.push({
                 data: {
-                    id: entity.name.toLowerCase(),
-                    label: entity.name
+                    id: entity.name.toUpperCase(),
+                    label: entity.name,
+                    attributes: entity.columns
                 },
                 classes: Classes.ENTITY,
-                grabbable: true,
+                grabbable: true
             });
 
             entity.columns.map(attr => {
                 attributes.push({
                     data: {
-                        id: `${entity.name.toLowerCase()}_${attr.name.toLowerCase()}`,
+                        id: `${entity.name.toUpperCase()}_${attr.name.toUpperCase()}`,
                         label: attr.name,
-                        parent: entity.name.toLowerCase()
+                        parent: entity.name.toUpperCase()
                     },
                     classes: Classes.ATTRIBUTE,
                     grabbable: false,
@@ -80,7 +77,7 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        console.log(elements);
+        // console.log(elements);
         return elements;
     }
 };

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
-import { validateInputJSON } from '../utils/utils.ts';
+// import { validateInputJSON } from '../utils/utils.ts';
 
 export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();
@@ -20,17 +20,20 @@ export const useGetData = () => {
                 const content = e.target?.result as string;
                 try {
                     const parsedElements = JSON.parse(content);
-                    if (validateInputJSON(parsedElements)) {
-                        setElements(JSONToElementFormatter(parsedElements));
-                        setUpdateFlag(true);
-                    } else {
-                        if (parsedElements.elements) {
-                            const nodes = parsedElements.elements.nodes;
-                            const edges = parsedElements.elements.edges;
-                            setElements({ nodes: nodes, edges: edges });
-                            setUpdateFlag(true);
-                        }
-                    }
+                    setElements(JSONToElementFormatter(parsedElements));
+                    setUpdateFlag(true);
+                    // TODO: валидация на разные JSON продумать
+                    // if (validateInputJSON(parsedElements)) {
+                    //     setElements(JSONToElementFormatter(parsedElements));
+                    //     setUpdateFlag(true);
+                    // } else {
+                    //     if (parsedElements.elements) {
+                    //         const nodes = parsedElements.elements.nodes;
+                    //         const edges = parsedElements.elements.edges;
+                    //         setElements({ nodes: nodes, edges: edges });
+                    //         setUpdateFlag(true);
+                    //     }
+                    // }
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
                 }
@@ -41,6 +44,7 @@ export const useGetData = () => {
 
     const handleJSONDownload = useCallback(() => {
         if (containerRef.current) {
+            // TODO: подумать над обратным форматтером
             const json = containerRef.current.json();
             const jsonStr = JSON.stringify(json, null, 2); // Форматируем JSON для читаемости
             const blob = new Blob([jsonStr], { type: 'application/json' });

@@ -1,11 +1,12 @@
 export interface AttributeJSON {
     name: string;
-    type: string;
+    [key: string]: any;
 }
 
 export interface EntityJSON {
     name: string;
     columns: AttributeJSON[];
+    [key: string]: any;
 }
 
 export interface SourceTargetJSON {

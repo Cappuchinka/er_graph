@@ -9,6 +9,9 @@ import cola from 'cytoscape-cola';
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../hooks/useGetData.ts';
+import {Classes} from "../types/elements.types.ts";
+import EntityComponent from "./EntityComponent.tsx";
+import {createRoot} from "react-dom/client";
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -36,16 +39,32 @@ const CytoscapeComponent = ({
         if (elements.nodes.length > 0) {
             cyRef.current = cytoscape({
                 container: containerRef.current,
-                elements: elements,
+                elements: [],
                 style: style,
                 layout: layout
             });
 
-            // Дополнительные настройки и обработчики событий
-            cyRef.current.on('tap', 'node', function(evt) {
-                const node = evt.target;
-                console.log('Выбран узел:', node.data());
-            });
+            cyRef.current.domNode();
+
+            const nodes = elements.nodes;
+
+            nodes.forEach(node => {
+                if (node.classes === Classes.ENTITY) {
+                    console.log(node.data.attributes);
+                    const entityComponent = <EntityComponent entityName={String(node.data.id)} columns={node.data.attributes} />
+
+                    const div = document.createElement("div");
+                    const root = createRoot(div);
+                    root.render(entityComponent);
+
+                    cyRef.current.add({
+                        'data': {
+                            'id': String(node.data.id),
+                            'dom': div,
+                        },
+                    });
+                }
+            })
 
             // Очистка при размонтировании компонента
             return () => {

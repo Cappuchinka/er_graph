@@ -9,9 +9,9 @@ import cola from 'cytoscape-cola';
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../hooks/useGetData.ts';
-import {Classes} from "../types/elements.types.ts";
-import EntityComponent from "./EntityComponent.tsx";
-import {createRoot} from "react-dom/client";
+import { Classes } from '../types/elements.types.ts';
+import EntityComponent from './EntityComponent.tsx';
+import { createRoot } from 'react-dom/client';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -50,13 +50,14 @@ const CytoscapeComponent = ({
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
-                    console.log(node.data.attributes);
                     const entityComponent = <EntityComponent entityName={String(node.data.id)} columns={node.data.attributes} />
 
                     const div = document.createElement("div");
                     const root = createRoot(div);
                     root.render(entityComponent);
 
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
                     cyRef.current.add({
                         'data': {
                             'id': String(node.data.id),
@@ -82,7 +83,7 @@ const CytoscapeComponent = ({
                 width: '100vw',
                 height: '100vw'
             }}
-            className={cnMixSpace({ mH: 0, mV: 0, pH: 0, pV: 0 })}
+            className={cnMixSpace({ m: 0, p: 0 })}
         />
     );
 };

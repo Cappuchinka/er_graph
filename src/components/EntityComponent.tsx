@@ -1,6 +1,7 @@
 import { TAttribute } from '../types/elements.types.ts';
 import { Layout } from '@consta/uikit/Layout';
 import { Text } from '@consta/uikit/Text';
+import AttributesOfEntityTable from './AttributesOfEntityTable.tsx';
 
 export interface EntityComponentProps {
     entityName: string;
@@ -27,26 +28,9 @@ export const EntityComponent = ({
             >
                 {entityName}
             </Text>
-            {columns.map((column, i) => {
-                return (
-                    <Layout
-                        key={i}
-                        direction="column"
-                        style={{
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: '14px',
-                                color: 'white'
-                            }}
-                        >
-                            {column.name} : {column.type}
-                        </Text>
-                    </Layout>
-                );
-            })}
+            <AttributesOfEntityTable
+                columns={columns}
+            />
         </Layout>
     );
 }

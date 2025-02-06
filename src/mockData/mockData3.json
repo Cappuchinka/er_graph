@@ -1,0 +1,272 @@
+{
+  "entities": [
+    {
+      "name": "CBS_SWIFT_ACC_SCHEMA",
+      "columns": [
+        {
+          "name": "F_BRANCH",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_TYPE",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_ACCOUNT",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_ID",
+          "type": "BIGINT",
+          "isPK": true
+        },
+        {
+          "name": "F_DISPLACEMENT",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_UNLOAD",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_DOC_ROUTE_TYPE",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_MAX_AMOUNT_TO_ACCEPT",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_NAME",
+          "type": "VARCHAR(255)",
+          "isPK": false
+        },
+        {
+          "name": "F_START_DATE",
+          "type": "DATETIME",
+          "isPK": false
+        },
+        {
+          "name": "F_MIN_AMOUNT_TO_WRITE_OFF",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_MIN_AMOUNT_TO_ACCEPT",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_ON_DEFAULT",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_MAX_AMOUNT_TO_WRITE_OFF",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_END_DATE",
+          "type": "DATETIME",
+          "isPK": false
+        }
+      ]
+    },
+    {
+      "name": "CBS_REGISTER_TYPE",
+      "columns": [
+        {
+          "name": "F_ID",
+          "type": "BIGINT",
+          "isPK": true
+        },
+        {
+          "name": "F_COMMENT",
+          "type": "VARCHAR(255)",
+          "isPK": false
+        },
+        {
+          "name": "F_HANDLE",
+          "type": "VARCHAR(255)",
+          "isPK": false
+        },
+        {
+          "name": "F_NAME",
+          "type": "VARCHAR(255)",
+          "isPK": false
+        },
+        {
+          "name": "F_WRITE_OFF_AVAILABLE",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_SYSTEM",
+          "type": "TINYINT",
+          "isPK": false
+        }
+      ]
+    },
+    {
+      "name": "CBS_CP_DEFINITION_RULE",
+      "columns": [
+        {
+          "name": "F_ID",
+          "isPK": false
+        }
+      ]
+    },
+    {
+      "name": "CBS_ACCOUNT_OWNER_TYPE",
+      "columns": [
+        {
+          "name": "F_ID",
+          "type": "BIGINT",
+          "isPK": true
+        },
+        {
+          "name": "F_SYSTEM_NAME",
+          "type": "VARCHAR(255)",
+          "isPK": true
+        },
+        {
+          "name": "F_NAME",
+          "type": "VARCHAR(255)",
+          "isPK": false
+        }
+      ]
+    },
+    {
+      "name": "CBS_CONTR_ACCRUAL",
+      "columns": [
+        {
+          "name": "F_CONTRACT_ID",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_ID",
+          "type": "BIGINT",
+          "isPK": true
+        },
+        {
+          "name": "F_SERVICE_ID",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_VAT_COMMISSION",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_TO_DATE",
+          "type": "DATETIME",
+          "isPK": false
+        },
+        {
+          "name": "F_FROM_DATE",
+          "type": "DATETIME",
+          "isPK": false
+        },
+        {
+          "name": "F_WRITING_OFF",
+          "type": "TINYINT",
+          "isPK": false
+        },
+        {
+          "name": "F_AMOUNT_REST",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_DISPATCHER_ID",
+          "type": "BIGINT",
+          "isPK": false
+        },
+        {
+          "name": "F_AMOUNT_COMMISSION",
+          "type": "FLOAT",
+          "isPK": false
+        },
+        {
+          "name": "F_VAT_REST",
+          "type": "FLOAT",
+          "isPK": false
+        }
+      ]
+    },
+    {
+      "name": "CBS_UN_QTY_REASON",
+      "columns": [
+        {
+          "name": "F_ID",
+          "type": "BIGINT",
+          "isPK": true
+        },
+        {
+          "name": "F_SYSTEM_NAME",
+          "type": "VARCHAR(300)",
+          "isPK": false
+        },
+        {
+          "name": "F_COMMENT",
+          "type": "VARCHAR(1954)",
+          "isPK": false
+        },
+        {
+          "name": "F_NAME",
+          "type": "VARCHAR(300)",
+          "isPK": false
+        },
+        {
+          "name": "F_SYSTEM",
+          "type": "NUMERIC(3, 0)",
+          "isPK": false
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "source": {
+        "table": "CBS_SWIFT_ACC_SCHEMA",
+        "field": "F_ID"
+      },
+      "target": {
+        "table": "CBS_CONTR_ACCRUAL",
+        "field": "F_CONTRACT_ID"
+      },
+      "type": "OneToMany"
+    },
+    {
+      "source": {
+        "table": "CBS_REGISTER_TYPE",
+        "field": "F_ID"
+      },
+      "target": {
+        "table": "CBS_CONTR_ACCRUAL",
+        "field": "F_SERVICE_ID"
+      },
+      "type": "OneToMany"
+    },
+    {
+      "source": {
+        "table": "CBS_CP_DEFINITION_RULE",
+        "field": "F_ID"
+      },
+      "target": {
+        "table": "CBS_CONTR_ACCRUAL",
+        "field": "F_DISPATCHER_ID"
+      },
+      "type": "OneToMany"
+    }]
+}

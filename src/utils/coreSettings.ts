@@ -35,6 +35,7 @@ export const STYLE: Stylesheet[] = [
 
 export const LAYOUT: LayoutOptions = {
     name: 'dagre',
+    // name: 'cola',
     rankDir: 'LR',
 };
 

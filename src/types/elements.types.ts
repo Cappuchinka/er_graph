@@ -5,19 +5,24 @@ export enum Classes {
 
 export interface NodeData {
     id: string;
-    label: string;
+    parent?: string;
+    [key: string]: any;
+}
+
+export interface Attribute {
+    data: NodeData
+    classes: Classes;
+    grabbable: boolean;
+}
+
+export interface TAttribute {
+    [key: string]: any;
 }
 
 export interface Entity {
     data: NodeData;
     classes: Classes;
     grabbable?: boolean;
-}
-
-export interface Attribute {
-    data: NodeData & { parent: string }
-    classes: Classes;
-    grabbable: boolean;
 }
 
 export interface EdgeData {

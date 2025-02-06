@@ -16,14 +16,16 @@ export const EntityComponent = ({
         <Layout
             direction="column"
             style={{
-                backgroundColor: 'darkblue'
+                backgroundColor: 'white',
+                border: '1px solid black',
+                alignItems: 'center',
             }}
         >
             <Text
                 style={{
                     fontSize: '20px',
                     fontWeight: 'bold',
-                    color: 'white'
+                    color: 'black'
                 }}
             >
                 {entityName}

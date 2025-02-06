@@ -28,17 +28,23 @@ export const AttributesOfEntityTable = ({
             title: null,
             dataIndex: 'key',
             key: 'key',
-            align: 'left',
-            width: '125px',
-            render: (record: TAttributeRow) => (
-                <Text
+            align: 'center',
+            width: '30px',
+            render: (value: any) => (
+                <div
                     style={{
-                        fontSize: '14px',
-                        color: 'white'
+                        height: '30px'
                     }}
                 >
-                    {record && record.key ? record.key : ''}
-                </Text>
+                    <Text
+                        style={{
+                            fontSize: '14px',
+                            color: 'black',
+                        }}
+                    >
+                        {value}
+                    </Text>
+                </div>
             )
         },
         {
@@ -47,15 +53,22 @@ export const AttributesOfEntityTable = ({
             key: 'name',
             align: 'left',
             width: '125px',
-            render: (record: TAttributeRow) => (
-                <Text
+            render: (value: any) => (
+                <div
                     style={{
-                        fontSize: '14px',
-                        color: 'white'
+                        height: '30px'
                     }}
                 >
-                    {record && record.name ? record.name : ''}
-                </Text>
+                    <Text
+                        style={{
+                            fontSize: '14px',
+                            color: 'black'
+                        }}
+                    >
+                        {value}
+                    </Text>
+                </div>
+
             )
         },
         {
@@ -64,15 +77,21 @@ export const AttributesOfEntityTable = ({
             key: 'type',
             align: 'left',
             width: '125px',
-            render: (record: TAttributeRow) => (
-                <Text
+            render: (value: any) => (
+                <div
                     style={{
-                        fontSize: '14px',
-                        color: 'white'
+                        height: '30px'
                     }}
                 >
-                    {record && record.type ? record.type : ''}
-                </Text>
+                    <Text
+                        style={{
+                            fontSize: '14px',
+                            color: 'black'
+                        }}
+                    >
+                        {value}
+                    </Text>
+                </div>
             )
         },
     ];

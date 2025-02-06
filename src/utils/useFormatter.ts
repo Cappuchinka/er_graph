@@ -44,11 +44,18 @@ const formatter: {
         });
 
         json.entities.map(entity => {
+            const columnsOfEntity = entity.columns.map(column => {
+                return {
+                    ...column,
+                    key: column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name) ? 'FK' : null
+                }
+            });
+
             entities.push({
                 data: {
                     id: entity.name.toUpperCase(),
                     label: entity.name,
-                    attributes: entity.columns
+                    attributes: columnsOfEntity
                 },
                 classes: Classes.ENTITY,
                 grabbable: true

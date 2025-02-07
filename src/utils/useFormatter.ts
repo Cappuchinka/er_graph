@@ -45,16 +45,17 @@ const formatter: {
 
         json.entities.map(entity => {
             const columnsOfEntity = entity.columns.map(column => {
+                const key = column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name) ? 'FK' : null;
                 return {
                     ...column,
-                    key: column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name) ? 'FK' : null
+                    key: key,
                 }
             });
 
             entities.push({
                 data: {
                     id: entity.name.toUpperCase(),
-                    label: entity.name,
+                    label: entity.name.toUpperCase(),
                     attributes: columnsOfEntity
                 },
                 classes: Classes.ENTITY,
@@ -65,7 +66,7 @@ const formatter: {
                 attributes.push({
                     data: {
                         id: `${entity.name.toUpperCase()}_${attr.name.toUpperCase()}`,
-                        label: attr.name,
+                        label: attr.name.toUpperCase(),
                         parent: entity.name.toUpperCase()
                     },
                     classes: Classes.ATTRIBUTE,
@@ -73,6 +74,7 @@ const formatter: {
                 });
             });
         });
+
 
         const elements: ElementsDefinition = { nodes: [], edges: [] };
         entities.map(entity => {

@@ -7,6 +7,7 @@ export const useGetData = () => {
     const { JSONToElementFormatter } = useFormatter();
 
     const cyRef = useRef<Core | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
@@ -64,6 +65,7 @@ export const useGetData = () => {
     return {
         elements,
         cyRef,
+        containerRef,
         handleFileUpload,
         handleJSONDownload,
         updateFlag

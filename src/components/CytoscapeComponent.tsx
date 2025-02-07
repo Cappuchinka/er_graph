@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -21,6 +21,7 @@ cytoscape.use(cytoscapeDomNode);
 export interface CytoscapeComponentProps {
     elements: ReturnType<typeof useGetData>['elements'];
     cyRef: ReturnType<typeof useGetData>['cyRef'];
+    containerRef: ReturnType<typeof useGetData>['containerRef'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
@@ -29,9 +30,9 @@ const CytoscapeComponent = ({
     elements,
     style,
     layout,
-    cyRef
+    cyRef,
+    containerRef,
 }: CytoscapeComponentProps) => {
-    const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -56,14 +57,14 @@ const CytoscapeComponent = ({
                     const root = createRoot(div);
                     root.render(entityComponent);
 
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-expect-error
-                    cyRef.current.add({
-                        'data': {
-                            'id': String(node.data.id),
-                            'dom': div,
-                        },
-                    });
+                    if (cyRef.current) {
+                        cyRef.current.add({
+                            'data': {
+                                'id': String(node.data.id),
+                                'dom': div,
+                            },
+                        });
+                    }
                 }
             })
 

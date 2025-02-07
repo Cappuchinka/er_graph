@@ -38,6 +38,8 @@ const formatter: {
                 data: {
                     source: `${ref.source.table}_${ref.source.field}`.toUpperCase(),
                     target: `${ref.target.table}_${ref.target.field}`.toUpperCase(),
+                    sourceTable: `${ref.source.table}`.toUpperCase(),
+                    targetTable: `${ref.target.table}`.toUpperCase(),
                     label: formatter.referenceTypeFormatter(ref.type)
                 }
             });
@@ -84,26 +86,6 @@ const formatter: {
             });
             entity.data.attributes = newEntityAttributes;
         });
-
-        // entities.map((entity) => {
-        //     entity.data.attributes.map((attr) => {
-        //         console.log(attr.key);
-        //     });
-        // });
-
-
-        // const res = attributes.map((attribute) => attribute.data).map((data) => {
-        //     return entities.map((entity) => {
-        //         return entity.data.attributes.map((attr) => {
-        //             return {
-        //                 key: attr.key
-        //             }
-        //         });
-        //     });
-        //     // return newData;
-        // });
-        //
-        // console.log(res);
 
         let i = 0;
         entities.map((entity) => {

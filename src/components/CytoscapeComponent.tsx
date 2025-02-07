@@ -6,16 +6,25 @@ import dagre from 'cytoscape-dagre';
 import cola from 'cytoscape-cola';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
+import fcose from 'cytoscape-fcose';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import coseBilkent from 'cytoscape-cose-bilkent';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../hooks/useGetData.ts';
 import { Classes } from '../types/elements.types.ts';
 import EntityComponent from './EntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
+import { CytoscapeAttributeKeyComponent } from './CytoscapeAttributeKeyComponent.tsx';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
 cytoscape.use(cola);
+cytoscape.use(fcose);
+cytoscape.use(coseBilkent);
 cytoscape.use(cytoscapeDomNode);
 
 export interface CytoscapeComponentProps {
@@ -41,13 +50,13 @@ const CytoscapeComponent = ({
             cyRef.current = cytoscape({
                 container: containerRef.current,
                 elements: [],
-                style: style,
-                layout: layout
             });
 
+            // подчёркивает красным, внимания не обращать
             cyRef.current.domNode();
 
             const nodes = elements.nodes;
+            const edges = elements.edges;
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
@@ -60,13 +69,53 @@ const CytoscapeComponent = ({
                     if (cyRef.current) {
                         cyRef.current.add({
                             'data': {
-                                'id': String(node.data.id),
+                                'id': String(node.data.id).toUpperCase(),
+                                'classes': String(node.classes),
                                 'dom': div,
                             },
                         });
                     }
                 }
-            })
+            });
+
+            nodes.forEach(node => {
+                if (node.classes === Classes.ATTRIBUTE) {
+                    if (!node.data.id) return;
+                    const attributeComponent = <CytoscapeAttributeKeyComponent divKey={node.data.id.toUpperCase()} value={node.data.key ? node.data.key : node.data.key} />
+
+                    const div = document.getElementById(node.data.id);
+                    if (div) {
+                        const root = createRoot(div);
+                        root.render(attributeComponent);
+                        console.log('A');
+
+                        if (cyRef.current) {
+                            cyRef.current.add({
+                                'data': {
+                                    'id': String(node.data.id).toUpperCase(),
+                                    'parent': String(node.data.parent).toUpperCase(),
+                                    'dom': div,
+                                },
+                            });
+                        }
+                    }
+                }
+            });
+
+            edges.forEach(edge => {
+                if (cyRef.current) {
+                    cyRef.current.add({
+                        data: {
+                            'source': edge.data.sourceTable,
+                            'target': edge.data.targetTable,
+                            'label': edge.data.label,
+                        }
+                    });
+                }
+            });
+
+            cyRef.current?.style(style);
+            cyRef.current?.layout(layout).run();
 
             // Очистка при размонтировании компонента
             return () => {

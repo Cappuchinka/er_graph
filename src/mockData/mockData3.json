@@ -268,5 +268,17 @@
         "field": "F_DISPATCHER_ID"
       },
       "type": "OneToMany"
-    }]
+    },
+    {
+      "source": {
+        "table": "CBS_ACCOUNT_OWNER_TYPE",
+        "field": "F_SYSTEM_NAME"
+      },
+      "target": {
+        "table": "CBS_REGISTER_TYPE",
+        "field": "F_NAME"
+      },
+      "type": "OneToMany"
+    }
+  ]
 }

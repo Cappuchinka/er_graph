@@ -30,29 +30,31 @@ export const AttributesOfEntityTable = ({
             key: 'key',
             align: 'center',
             width: '30px',
-            render: (value: any) => (
-                <div
-                    style={{
-                        height: '30px'
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: '14px',
-                            color: 'black',
-                        }}
-                    >
-                        {value}
-                    </Text>
-                </div>
-            )
+            render: (value: any, record: TAttributeRow) => {
+                return (
+                    <>
+                        {record.divKeyId ? (
+                            <div
+                                id={record.divKeyId}
+                                style={{
+                                    height: '30px'
+                                }}
+                            >
+                                {value}
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                    </>
+                );
+            }
         },
         {
             title: null,
             dataIndex: 'name',
             key: 'name',
             align: 'left',
-            width: '125px',
+            width: '300px',
             render: (value: any) => (
                 <div
                     style={{
@@ -76,7 +78,7 @@ export const AttributesOfEntityTable = ({
             dataIndex: 'type',
             key: 'type',
             align: 'left',
-            width: '125px',
+            width: '150px',
             render: (value: any) => (
                 <div
                     style={{

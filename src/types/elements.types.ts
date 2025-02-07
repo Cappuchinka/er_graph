@@ -17,6 +17,10 @@ export interface TAttribute {
     [key: string]: any;
 }
 
+export interface TAttributeRow extends TAttribute {
+    rowNumber: number;
+}
+
 export interface Entity extends NodeDefinition {
     classes: Classes;
     grabbable?: boolean;

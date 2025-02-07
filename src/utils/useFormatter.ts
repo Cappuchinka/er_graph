@@ -38,17 +38,27 @@ const formatter: {
                 data: {
                     source: `${ref.source.table}_${ref.source.field}`.toUpperCase(),
                     target: `${ref.target.table}_${ref.target.field}`.toUpperCase(),
+                    sourceTable: `${ref.source.table}`.toUpperCase(),
+                    targetTable: `${ref.target.table}`.toUpperCase(),
                     label: formatter.referenceTypeFormatter(ref.type)
                 }
             });
         });
 
         json.entities.map(entity => {
+            const columnsOfEntity = entity.columns.map(column => {
+                const key = column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name) ? 'FK' : null;
+                return {
+                    ...column,
+                    key: key,
+                }
+            });
+
             entities.push({
                 data: {
                     id: entity.name.toUpperCase(),
-                    label: entity.name,
-                    attributes: entity.columns
+                    label: entity.name.toUpperCase(),
+                    attributes: columnsOfEntity
                 },
                 classes: Classes.ENTITY,
                 grabbable: true
@@ -58,13 +68,31 @@ const formatter: {
                 attributes.push({
                     data: {
                         id: `${entity.name.toUpperCase()}_${attr.name.toUpperCase()}`,
-                        label: attr.name,
+                        label: attr.name.toUpperCase(),
                         parent: entity.name.toUpperCase()
                     },
                     classes: Classes.ATTRIBUTE,
                     grabbable: false,
                 });
             });
+        });
+
+        entities.forEach((entity) => {
+            const newEntityAttributes = entity.data.attributes.map((entAttr: any, index: number) => {
+                return {
+                    ...entAttr,
+                    divKeyId: entAttr.key ? attributes.filter(attr => attr.data.parent === entity.data.id)[index].data.id : null
+                }
+            });
+            entity.data.attributes = newEntityAttributes;
+        });
+
+        let i = 0;
+        entities.map((entity) => {
+            entity.data.attributes.map((attr) => {
+                attributes[i].data.key = attr.key;
+                i++;
+            })
         });
 
         const elements: ElementsDefinition = { nodes: [], edges: [] };

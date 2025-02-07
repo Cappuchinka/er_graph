@@ -5,7 +5,8 @@
       "columns": [
         {
           "name": "id",
-          "type": "integer"
+          "type": "integer",
+          "isPK": true
         }
       ]
     },
@@ -14,11 +15,18 @@
       "columns": [
         {
           "name": "id",
-          "type": "integer"
+          "type": "integer",
+          "isPK": true
         },
         {
           "name": "department_id",
-          "type": "integer"
+          "type": "integer",
+          "isPK": false
+        },
+        {
+          "name": "name",
+          "type": "integer",
+          "isPK": false
         }
       ]
     }

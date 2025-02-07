@@ -4,7 +4,7 @@ export const STYLE: Stylesheet[] = [
     {
         selector: 'node.entity',
         style: {
-            'width': 150,
+            'width': 400,
             'height': 40,
             'text-valign': 'center',
             'shape': 'rectangle',
@@ -15,7 +15,7 @@ export const STYLE: Stylesheet[] = [
         selector: 'node.attribute',
         style: {
             'label': 'data(label)',
-            'width': 120,
+            'width': 400,
             'height': 25,
             'text-valign': 'center',
             'shape': 'round-rectangle',
@@ -34,9 +34,18 @@ export const STYLE: Stylesheet[] = [
 ];
 
 export const LAYOUT: LayoutOptions = {
-    name: 'dagre',
+    // name: 'dagre',
     // name: 'cola',
+    // name: 'fcose',
+    name: 'cose-bilkent',
     rankDir: 'LR',
+    idealEdgeLength: 750,
+    nodeRepulsion: 50000000, // Увеличиваем отталкивание узлов
+    nodeOverlap: 0, // Уменьшаем перекрытие узлов
+    padding: 100, // Отступы вокруг графа
+    animate: false, // Анимация
+    randomize: true, // Не рандомизировать позиции
+    componentSpacing: 100, // Расстояние между компонентами
 };
 
 export const ELEMENTS: ElementDefinition[] = [

@@ -245,7 +245,7 @@
         "table": "CBS_CONTR_ACCRUAL",
         "field": "F_CONTRACT_ID"
       },
-      "type": "OneToMany"
+      "type": "OneToOne"
     },
     {
       "source": {
@@ -267,7 +267,7 @@
         "table": "CBS_CONTR_ACCRUAL",
         "field": "F_DISPATCHER_ID"
       },
-      "type": "OneToMany"
+      "type": "ManyToMany"
     },
     {
       "source": {
@@ -278,7 +278,18 @@
         "table": "CBS_REGISTER_TYPE",
         "field": "F_NAME"
       },
-      "type": "OneToMany"
+      "type": "ManyToOne"
+    },
+    {
+      "source": {
+        "table": "CBS_CONTR_ACCRUAL",
+        "field": "F_ID"
+      },
+      "target": {
+        "table": "CBS_UN_QTY_REASON",
+        "field": "F_SYSTEM"
+      },
+      "type": "OneToOne"
     }
   ]
 }

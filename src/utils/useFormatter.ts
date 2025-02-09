@@ -50,7 +50,7 @@ const formatter: {
 
         json.entities.map(entity => {
             const columnsOfEntity = entity.columns.map(column => {
-                const key = column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name) ? 'FK' : null;
+                const key = column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name && ref.target.table === entity.name) ? 'FK' : null;
                 return {
                     ...column,
                     key: key,

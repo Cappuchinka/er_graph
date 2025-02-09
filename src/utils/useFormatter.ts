@@ -40,7 +40,10 @@ const formatter: {
                     target: `${ref.target.table}_${ref.target.field}`.toUpperCase(),
                     sourceTable: `${ref.source.table}`.toUpperCase(),
                     targetTable: `${ref.target.table}`.toUpperCase(),
-                    label: formatter.referenceTypeFormatter(ref.type)
+                    sourceField: `${ref.source.field}`.toUpperCase(),
+                    targetField: `${ref.target.field}`.toUpperCase(),
+                    label: formatter.referenceTypeFormatter(ref.type),
+                    type: ref.type
                 }
             });
         });
@@ -105,7 +108,7 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        // console.log(elements);
+        console.log(elements);
         return elements;
     }
 };

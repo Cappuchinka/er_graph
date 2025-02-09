@@ -18,7 +18,6 @@ import { useGetData } from '../hooks/useGetData.ts';
 import { Classes } from '../types/elements.types.ts';
 import EntityComponent from './EntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
-import { CytoscapeAttributeKeyComponent } from './CytoscapeAttributeKeyComponent.tsx';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -50,6 +49,7 @@ const CytoscapeComponent = ({
             cyRef.current = cytoscape({
                 container: containerRef.current,
                 elements: [],
+                style: style,
             });
 
             // подчёркивает красным, внимания не обращать
@@ -60,7 +60,13 @@ const CytoscapeComponent = ({
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
-                    const entityComponent = <EntityComponent entityName={String(node.data.id)} columns={node.data.attributes} />
+                    const entityComponent = (
+                        <EntityComponent
+                            entityName={String(node.data.id)}
+                            columns={node.data.attributes}
+                            edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
+                        />
+                    );
 
                     const div = document.createElement("div");
                     const root = createRoot(div);
@@ -78,30 +84,6 @@ const CytoscapeComponent = ({
                 }
             });
 
-            nodes.forEach(node => {
-                if (node.classes === Classes.ATTRIBUTE) {
-                    if (!node.data.id) return;
-                    const attributeComponent = <CytoscapeAttributeKeyComponent divKey={node.data.id.toUpperCase()} value={node.data.key ? node.data.key : node.data.key} />
-
-                    const div = document.getElementById(node.data.id);
-                    if (div) {
-                        const root = createRoot(div);
-                        root.render(attributeComponent);
-                        console.log('A');
-
-                        if (cyRef.current) {
-                            cyRef.current.add({
-                                'data': {
-                                    'id': String(node.data.id).toUpperCase(),
-                                    'parent': String(node.data.parent).toUpperCase(),
-                                    'dom': div,
-                                },
-                            });
-                        }
-                    }
-                }
-            });
-
             edges.forEach(edge => {
                 if (cyRef.current) {
                     cyRef.current.add({
@@ -109,12 +91,12 @@ const CytoscapeComponent = ({
                             'source': edge.data.sourceTable,
                             'target': edge.data.targetTable,
                             'label': edge.data.label,
+                            'type': edge.data.type
                         }
                     });
                 }
             });
 
-            cyRef.current?.style(style);
             cyRef.current?.layout(layout).run();
 
             // Очистка при размонтировании компонента

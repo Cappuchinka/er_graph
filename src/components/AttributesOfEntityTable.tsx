@@ -4,13 +4,17 @@ import { rcTableAdapter } from '@consta/rc-table-adapter/rcTableAdapter';
 import RCTable, { ColumnType, TableProps } from 'rc-table';
 import { useEffect, useState } from 'react';
 import { withTooltip } from '@consta/uikit/withTooltip';
+import { EdgeDefinition } from 'cytoscape';
+import { Layout } from '@consta/uikit/Layout';
 
 export interface AttributesOfEntityTableProps {
     columns: TAttribute[];
+    edges: EdgeDefinition[];
 }
 
 export const AttributesOfEntityTable = ({
-    columns
+    columns,
+    edges,
 }: AttributesOfEntityTableProps) => {
     const [data, setData] = useState<TAttributeRow[]>([]);
 
@@ -25,6 +29,61 @@ export const AttributesOfEntityTable = ({
     }, [columns]);
 
     const KeyTooltip = withTooltip()(Text);
+
+    const TooltipContent = (record: TAttributeRow, key: string) => {
+        let edge;
+        if (key === 'PK') {
+            edge = edges.find(edge => edge.data.source === record.divKeyId);
+        } else {
+            edge = edges.find(edge => edge.data.targetField === record.name.toUpperCase());
+        }
+
+        if (edge) {
+            return (
+                <Layout
+                    direction="column"
+                >
+                    <Text
+                        style={{
+                            color: 'white',
+                        }}
+                    >
+                        Source Table: {edge.data.sourceTable}
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                        }}
+                    >
+                        Target Table: {edge.data.targetTable}
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                        }}
+                    >
+                        Source Field: {edge.data.sourceField}
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                        }}
+                    >
+                        Target Field: {edge.data.targetField}
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'white',
+                        }}
+                    >
+                        Type: {edge.data.type}
+                    </Text>
+                </Layout>
+            );
+        } else {
+            return null;
+        }
+    }
 
     const columnsTable: ColumnType<TAttributeRow>[] = [
         {
@@ -43,12 +102,18 @@ export const AttributesOfEntityTable = ({
                                     height: '30px'
                                 }}
                             >
-                                <KeyTooltip
-                                    content={value}
-                                    tooltipProps={{ content: value }}
-                                >
-                                    {value}
-                                </KeyTooltip>
+                                {record.key ? (
+                                    <KeyTooltip
+                                        content={value}
+                                        tooltipProps={{ content: TooltipContent(record, record.key) }}
+                                    >
+                                        {value}
+                                    </KeyTooltip>
+                                ) : (
+                                    <Text>
+                                        {value}
+                                    </Text>
+                                )}
                             </div>
                         ) : (
                             <></>

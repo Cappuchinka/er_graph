@@ -2,15 +2,18 @@ import { TAttribute } from '../types/elements.types.ts';
 import { Layout } from '@consta/uikit/Layout';
 import { Text } from '@consta/uikit/Text';
 import AttributesOfEntityTable from './AttributesOfEntityTable.tsx';
+import {useGetData} from "../hooks/useGetData.ts";
 
 export interface EntityComponentProps {
     entityName: string;
     columns: TAttribute[];
+    cyRef: ReturnType<typeof useGetData>['cyRef'];
 }
 
 export const EntityComponent = ({
     entityName,
     columns,
+    cyRef,
 }: EntityComponentProps) => {
     return (
         <Layout
@@ -32,6 +35,8 @@ export const EntityComponent = ({
             </Text>
             <AttributesOfEntityTable
                 columns={columns}
+                cyRef={cyRef}
+                parent={entityName}
             />
         </Layout>
     );

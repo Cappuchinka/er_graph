@@ -14,11 +14,11 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 // @ts-expect-error
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
-import { useGetData } from '../hooks/useGetData.ts';
-import { Classes } from '../types/elements.types.ts';
-import EntityComponent from './EntityComponent.tsx';
+import { useGetData } from '../../hooks/useGetData.ts';
+import { Classes } from '../../types/elements.types.ts';
 import { createRoot } from 'react-dom/client';
-import { CytoscapeAttributeKeyComponent } from './CytoscapeAttributeKeyComponent.tsx';
+import CytoscapeAttributeRow from "./CytoscapeAttributeRow.tsx";
+import { CytoscapeEntityComponent } from "./CytoscapeEntityComponent.tsx";
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -55,50 +55,43 @@ const CytoscapeComponent = ({
             // подчёркивает красным, внимания не обращать
             cyRef.current.domNode();
 
-            const nodes = elements.nodes;
+            const entities = elements.nodes.filter(node => node.classes === Classes.ENTITY);
+            const attributes = elements.nodes.filter(node => node.classes === Classes.ATTRIBUTE);
             const edges = elements.edges;
 
-            nodes.forEach(node => {
-                if (node.classes === Classes.ENTITY) {
-                    const entityComponent = <EntityComponent entityName={String(node.data.id)} columns={node.data.attributes} />
+            entities.forEach(entity => {
+                const entityNode = (<CytoscapeEntityComponent/>);
+                const div = document.createElement('div');
+                const root = createRoot(div);
+                root.render(entityNode);
 
-                    const div = document.createElement("div");
-                    const root = createRoot(div);
-                    root.render(entityComponent);
-
-                    if (cyRef.current) {
-                        cyRef.current.add({
-                            'data': {
-                                'id': String(node.data.id).toUpperCase(),
-                                'classes': String(node.classes),
-                                'dom': div,
-                            },
-                        });
-                    }
+                if (cyRef.current) {
+                    cyRef.current.add({
+                        'data': {
+                            'id': String(entity.data.id).toUpperCase(),
+                            'dom': div,
+                        },
+                        'classes': String(entity.classes),
+                    });
                 }
             });
 
-            nodes.forEach(node => {
-                if (node.classes === Classes.ATTRIBUTE) {
-                    if (!node.data.id) return;
-                    const attributeComponent = <CytoscapeAttributeKeyComponent divKey={node.data.id.toUpperCase()} value={node.data.key ? node.data.key : node.data.key} />
+            attributes.forEach((attribute) => {
+                const attributeRow = (<CytoscapeAttributeRow attribute={attribute}/>);
+                const div = document.createElement('div');
+                const root = createRoot(div);
+                root.render(attributeRow);
 
-                    const div = document.getElementById(node.data.id);
-                    if (div) {
-                        const root = createRoot(div);
-                        root.render(attributeComponent);
-                        console.log('A');
-
-                        if (cyRef.current) {
-                            cyRef.current.add({
-                                'data': {
-                                    'id': String(node.data.id).toUpperCase(),
-                                    'parent': String(node.data.parent).toUpperCase(),
-                                    'dom': div,
-                                },
-                            });
-                        }
-                    }
+                if (cyRef.current) {
+                    cyRef.current.add({
+                        'data': {
+                            'id': String(attribute.data.id).toUpperCase(),
+                            'parent': String(attribute.data.parent),
+                            'dom': div,
+                        },
+                        'classes': String(attribute.classes),
+                        // 'grabbable': false
+                    });
                 }
             });
 
@@ -106,8 +99,10 @@ const CytoscapeComponent = ({
                 if (cyRef.current) {
                     cyRef.current.add({
                         data: {
-                            'source': edge.data.sourceTable,
-                            'target': edge.data.targetTable,
+                            'source': edge.data.source,
+                            'target': edge.data.target,
+                            // 'source': edge.data.sourceTable,
+                            // 'target': edge.data.targetTable,
                             'label': edge.data.label,
                         }
                     });

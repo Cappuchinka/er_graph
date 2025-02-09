@@ -69,6 +69,7 @@ const formatter: {
                     data: {
                         id: `${entity.name.toUpperCase()}_${attr.name.toUpperCase()}`,
                         label: attr.name.toUpperCase(),
+                        type: attr.type ? attr.type.toUpperCase() : '',
                         parent: entity.name.toUpperCase()
                     },
                     classes: Classes.ATTRIBUTE,
@@ -105,7 +106,7 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        // console.log(elements);
+        console.log(elements);
         return elements;
     }
 };

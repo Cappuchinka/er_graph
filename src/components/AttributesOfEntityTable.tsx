@@ -3,13 +3,19 @@ import { Text } from '@consta/uikit/Text';
 import { rcTableAdapter } from '@consta/rc-table-adapter/rcTableAdapter';
 import RCTable, { ColumnType, TableProps } from 'rc-table';
 import { useEffect, useState } from 'react';
+import {CytoscapeAttributeKeyComponent} from "./CytoscapeAttributeKeyComponent.tsx";
+import {useGetData} from "../hooks/useGetData.ts";
 
 export interface AttributesOfEntityTableProps {
     columns: TAttribute[];
+    cyRef: ReturnType<typeof useGetData>['cyRef'];
+    parent: string;
 }
 
 export const AttributesOfEntityTable = ({
-    columns
+    columns,
+    cyRef,
+    parent,
 }: AttributesOfEntityTableProps) => {
     const [data, setData] = useState<TAttributeRow[]>([]);
 
@@ -21,6 +27,7 @@ export const AttributesOfEntityTable = ({
             }
         });
         setData(convertData);
+        console.log(convertData)
     }, [columns]);
 
     const columnsTable: ColumnType<TAttributeRow>[] = [
@@ -34,14 +41,12 @@ export const AttributesOfEntityTable = ({
                 return (
                     <>
                         {record.divKeyId ? (
-                            <div
-                                id={record.divKeyId}
-                                style={{
-                                    height: '30px'
-                                }}
-                            >
-                                {value}
-                            </div>
+                            <CytoscapeAttributeKeyComponent
+                                divKey={record.divKeyId}
+                                value={value}
+                                cyRef={cyRef}
+                                parent={parent}
+                            />
                         ) : (
                             <></>
                         )}

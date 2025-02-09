@@ -4,23 +4,12 @@ export const STYLE: Stylesheet[] = [
     {
         selector: 'node.entity',
         style: {
-            'width': 400,
+            'width': 'min-content',
             'height': 40,
-            'text-valign': 'center',
+            'background-color': 'white',
+            'text-valign': 'top',
             'shape': 'rectangle',
             'border-width': 2,
-        }
-    },
-    {
-        selector: 'node.attribute',
-        style: {
-            'label': 'data(label)',
-            'width': 400,
-            'height': 25,
-            'text-valign': 'center',
-            'shape': 'round-rectangle',
-            'border-width': 1,
-            'border-color': '#333',
         }
     },
     {

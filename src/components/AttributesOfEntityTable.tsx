@@ -3,6 +3,7 @@ import { Text } from '@consta/uikit/Text';
 import { rcTableAdapter } from '@consta/rc-table-adapter/rcTableAdapter';
 import RCTable, { ColumnType, TableProps } from 'rc-table';
 import { useEffect, useState } from 'react';
+import { withTooltip } from '@consta/uikit/withTooltip';
 
 export interface AttributesOfEntityTableProps {
     columns: TAttribute[];
@@ -23,6 +24,8 @@ export const AttributesOfEntityTable = ({
         setData(convertData);
     }, [columns]);
 
+    const KeyTooltip = withTooltip()(Text);
+
     const columnsTable: ColumnType<TAttributeRow>[] = [
         {
             title: null,
@@ -40,7 +43,12 @@ export const AttributesOfEntityTable = ({
                                     height: '30px'
                                 }}
                             >
-                                {value}
+                                <KeyTooltip
+                                    content={value}
+                                    tooltipProps={{ content: value }}
+                                >
+                                    {value}
+                                </KeyTooltip>
                             </div>
                         ) : (
                             <></>

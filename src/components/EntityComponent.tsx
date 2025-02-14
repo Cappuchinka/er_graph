@@ -2,16 +2,20 @@ import { TAttribute } from '../types/elements.types.ts';
 import { Layout } from '@consta/uikit/Layout';
 import { Text } from '@consta/uikit/Text';
 import AttributesOfEntityTable from './AttributesOfEntityTable.tsx';
+import { EdgeDefinition } from 'cytoscape';
 
 export interface EntityComponentProps {
     entityName: string;
     columns: TAttribute[];
+    edges: EdgeDefinition[];
 }
 
 export const EntityComponent = ({
     entityName,
     columns,
+    edges
 }: EntityComponentProps) => {
+
     return (
         <Layout
             direction="column"
@@ -32,6 +36,7 @@ export const EntityComponent = ({
             </Text>
             <AttributesOfEntityTable
                 columns={columns}
+                edges={edges}
             />
         </Layout>
     );

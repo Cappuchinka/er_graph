@@ -14,7 +14,7 @@ export interface ToolbarProps {
 export const Toolbar = ({
     handleFileUpload,
     handleJSONDownload,
-    // updateFlag
+    updateFlag
 }: ToolbarProps) => {
     return (
         <Layout
@@ -52,8 +52,8 @@ export const Toolbar = ({
                 </FileField>
 
                 <Button
-                    disabled
-                    // disabled={!updateFlag}
+                    // disabled
+                    disabled={!updateFlag}
                     className={cnMixSpace({ mL: 's' })}
                     label="Скачать JSON"
                     onClick={() => {

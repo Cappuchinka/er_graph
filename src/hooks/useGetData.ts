@@ -1,18 +1,24 @@
-import { useCallback, useRef, useState } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 // import { validateInputJSON } from '../utils/utils.ts';
 
 export const useGetData = () => {
-    const { JSONToElementFormatter } = useFormatter();
+    const { JSONToElementFormatter, ElementToJSONFormatter } = useFormatter();
 
     const cyRef = useRef<Core | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
+    useEffect(() => {
+        if (elements.nodes.length === 0 || elements.edges.length === 0) {
+            setUpdateFlag(false);
+        }
+    }, [elements]);
+
     const handleFileUpload = useCallback(() => {
-        setUpdateFlag(false);
+        // setUpdateFlag(false);
         const jsonFileInput = document.getElementById('jsonFileInput') as HTMLInputElement;
         if (jsonFileInput.files && jsonFileInput.files.length > 0) {
             const file = jsonFileInput.files[0];
@@ -45,22 +51,23 @@ export const useGetData = () => {
 
     const handleJSONDownload = useCallback(() => {
         if (cyRef.current) {
-            // TODO: подумать над обратным форматтером
-            const json = cyRef.current.json();
-            const jsonStr = JSON.stringify(json, null, 2); // Форматируем JSON для читаемости
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+
+            const result = ElementToJSONFormatter(elements);
+            const outputJson = JSON.stringify(result);
+
+            const blobJSON = new Blob([outputJson], { type: 'application/json' });
+            const urlJSON = URL.createObjectURL(blobJSON);
 
             // Создаем ссылку для скачивания
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'graph.json'; // Имя файла
-            a.click();
+            const aJSON = document.createElement('a');
+            aJSON.href = urlJSON;
+            aJSON.download = 'graph.json'; // Имя файла
+            aJSON.click();
 
             // Освобождаем память
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(urlJSON);
         }
-    }, []);
+    }, [ElementToJSONFormatter, elements]);
 
     return {
         elements,

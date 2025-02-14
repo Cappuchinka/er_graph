@@ -76,9 +76,9 @@ const CytoscapeComponent = ({
                         cyRef.current.add({
                             'data': {
                                 'id': String(node.data.id).toUpperCase(),
-                                'classes': String(node.classes),
                                 'dom': div,
                             },
+                            'classes': String(node.classes),
                         });
                     }
                 }

@@ -1,6 +1,7 @@
 import { Attribute, Classes, Edge, Entity, TAttribute } from '../types/elements.types.ts';
 import { EntityJSON, InputJSON, ReferenceJSON } from '../types/json.types.ts';
 import {ElementsDefinition, NodeDefinition} from 'cytoscape';
+import {Template} from "../types/template.types.ts";
 
 const formatter: {
     referenceTypeFormatter: (
@@ -15,6 +16,9 @@ const formatter: {
     ElementToJSONFormatter: (
         elements: ElementsDefinition,
     ) => InputJSON;
+    getPositionForEntity: (
+        graph: ElementsDefinition,
+    ) => Template[];
 } = {
     referenceTypeFormatter: (type: string) => {
         let result = '';
@@ -170,6 +174,23 @@ const formatter: {
             }
         });
 
+        return result;
+    },
+    getPositionForEntity: (graph: ElementsDefinition) => {
+        const result: Template[] = [];
+        const nodes = graph.nodes;
+        nodes.forEach(node => {
+            if (node.classes === Classes.ENTITY) {
+                result.push({
+                    name: String(node.data.id),
+                    position: {
+                        x: Number(node.position?.x),
+                        y: Number(node.position?.y)
+                    }
+                });
+            }
+        });
+        
         return result;
     }
 };

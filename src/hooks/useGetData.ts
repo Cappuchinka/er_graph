@@ -4,7 +4,7 @@ import { useFormatter } from '../utils/useFormatter.ts';
 // import { validateInputJSON } from '../utils/utils.ts';
 
 export const useGetData = () => {
-    const { JSONToElementFormatter, ElementToJSONFormatter } = useFormatter();
+    const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
 
     const cyRef = useRef<Core | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -51,9 +51,8 @@ export const useGetData = () => {
 
     const handleJSONDownload = useCallback(() => {
         if (cyRef.current) {
-
-            const result = ElementToJSONFormatter(elements);
-            const outputJson = JSON.stringify(result);
+            const elementToJSON = ElementToJSONFormatter(elements);
+            const outputJson = JSON.stringify(elementToJSON);
 
             const blobJSON = new Blob([outputJson], { type: 'application/json' });
             const urlJSON = URL.createObjectURL(blobJSON);
@@ -66,8 +65,23 @@ export const useGetData = () => {
 
             // Освобождаем память
             URL.revokeObjectURL(urlJSON);
+
+            const template = getPositionForEntity(cyRef.current.json().elements);
+            const outputTemplate = JSON.stringify(template);
+
+            const blobTemplate = new Blob([outputTemplate], { type: 'template' });
+            const urlTemplate = URL.createObjectURL(blobTemplate);
+
+            // Создаем ссылку для скачивания
+            const aTemplate = document.createElement('a');
+            aTemplate.href = urlTemplate;
+            aTemplate.download = 'graph.template'; // Имя файла
+            aTemplate.click();
+
+            // Освобождаем память
+            URL.revokeObjectURL(urlTemplate);
         }
-    }, [ElementToJSONFormatter, elements]);
+    }, [ElementToJSONFormatter, elements, getPositionForEntity]);
 
     return {
         elements,

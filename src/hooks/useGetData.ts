@@ -1,7 +1,6 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
-// import { validateInputJSON } from '../utils/utils.ts';
 
 export const useGetData = () => {
     const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
@@ -10,6 +9,9 @@ export const useGetData = () => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
+
+    const [isOpenDownloadJSONModal, setIsOpenDownloadJSONModal] = useState<boolean>(false);
+    const [downloadFileName, setDownloadFileName] = useState<string | null>(null);
 
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
@@ -29,18 +31,6 @@ export const useGetData = () => {
                     const parsedElements = JSON.parse(content);
                     setElements(JSONToElementFormatter(parsedElements));
                     setUpdateFlag(true);
-                    // TODO: валидация на разные JSON продумать
-                    // if (validateInputJSON(parsedElements)) {
-                    //     setElements(JSONToElementFormatter(parsedElements));
-                    //     setUpdateFlag(true);
-                    // } else {
-                    //     if (parsedElements.elements) {
-                    //         const nodes = parsedElements.elements.nodes;
-                    //         const edges = parsedElements.elements.edges;
-                    //         setElements({ nodes: nodes, edges: edges });
-                    //         setUpdateFlag(true);
-                    //     }
-                    // }
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
                 }
@@ -60,7 +50,7 @@ export const useGetData = () => {
             // Создаем ссылку для скачивания
             const aJSON = document.createElement('a');
             aJSON.href = urlJSON;
-            aJSON.download = 'graph.json'; // Имя файла
+            aJSON.download = `${downloadFileName}.json`; // Имя файла
             aJSON.click();
 
             // Освобождаем память
@@ -75,13 +65,22 @@ export const useGetData = () => {
             // Создаем ссылку для скачивания
             const aTemplate = document.createElement('a');
             aTemplate.href = urlTemplate;
-            aTemplate.download = 'graph.template'; // Имя файла
+            aTemplate.download = `${downloadFileName}.template`; // Имя файла
             aTemplate.click();
 
             // Освобождаем память
             URL.revokeObjectURL(urlTemplate);
         }
-    }, [ElementToJSONFormatter, elements, getPositionForEntity]);
+    }, [ElementToJSONFormatter, downloadFileName, elements, getPositionForEntity]);
+
+    const onCancel = useCallback(() => {
+        setDownloadFileName(null);
+        setIsOpenDownloadJSONModal(false);
+    }, []);
+
+    const onAccept = useCallback(() => {
+        handleJSONDownload();
+    }, [handleJSONDownload]);
 
     return {
         elements,
@@ -89,6 +88,12 @@ export const useGetData = () => {
         containerRef,
         handleFileUpload,
         handleJSONDownload,
-        updateFlag
+        updateFlag,
+        isOpenDownloadJSONModal,
+        setIsOpenDownloadJSONModal,
+        downloadFileName,
+        setDownloadFileName,
+        onCancel,
+        onAccept
     }
 };

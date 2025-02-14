@@ -5,7 +5,19 @@ import Toolbar from '../components/Toolbar.tsx';
 import { useGetData } from '../hooks/useGetData.ts';
 
 export const ERDiagramPage = () => {
-    const { elements, cyRef, containerRef, handleFileUpload, handleJSONDownload, updateFlag } = useGetData();
+    const {
+        elements,
+        cyRef,
+        containerRef,
+        handleFileUpload,
+        updateFlag,
+        isOpenDownloadJSONModal,
+        setIsOpenDownloadJSONModal,
+        downloadFileName,
+        setDownloadFileName,
+        onCancel,
+        onAccept
+    } = useGetData();
 
     return (
         <Layout
@@ -13,8 +25,13 @@ export const ERDiagramPage = () => {
         >
             <Toolbar
                 handleFileUpload={handleFileUpload}
-                handleJSONDownload={handleJSONDownload}
                 updateFlag={updateFlag}
+                downloadFileName={downloadFileName}
+                setDownloadFileName={setDownloadFileName}
+                isOpenDownloadJSONModal={isOpenDownloadJSONModal}
+                setIsOpenDownloadJSONModal={setIsOpenDownloadJSONModal}
+                onCancel={onCancel}
+                onAccept={onAccept}
             />
             <CytoscapeComponent
                 cyRef={cyRef}

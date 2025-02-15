@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import { useEffect } from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -104,6 +104,12 @@ const CytoscapeComponent = ({
                     data: {
                         'source': edge.data.sourceTable,
                         'target': edge.data.targetTable,
+                        'sourceTable': edge.data.sourceTable,
+                        'targetTable': edge.data.targetTable,
+                        'sourceField': edge.data.sourceField,
+                        'targetField': edge.data.targetField,
+                        'sourceInfo': edge.data.source,
+                        'targetInfo': edge.data.target,
                         'label': edge.data.label,
                         'type': edge.data.type
                     }
@@ -121,6 +127,23 @@ const CytoscapeComponent = ({
             })
         }
     }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);
+
+    // useEffect(() => {
+    //     // Дополнительные настройки и обработчики событий
+    //     if (cyRef.current) {
+    //         cyRef.current.on('tap', 'edge', function(evt) {
+    //             const node = evt.target;
+    //             console.log('Выбрано ребро:', node.data());
+    //             const targetRow = document.getElementById(node.data().targetInfo);
+    //             const sourceRow = document.getElementById(node.data().sourceInfo);
+    //
+    //             if (targetRow && sourceRow) {
+    //                 targetRow.style.backgroundColor = "FF0000";
+    //                 sourceRow.style.backgroundColor = "FF0000";
+    //             }
+    //         });
+    //     }
+    // }, [cyRef]);
 
     useEffect(() => {
         // Очистка при размонтировании компонента

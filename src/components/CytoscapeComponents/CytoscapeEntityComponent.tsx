@@ -3,7 +3,7 @@ import { Layout } from '@consta/uikit/Layout';
 import { Text } from '@consta/uikit/Text';
 import { EdgeDefinition } from 'cytoscape';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
-import KeyTooltip from "../KeyTooltip.tsx";
+import KeyTooltip from '../KeyTooltip.tsx';
 
 export interface EntityComponentProps {
     entityName: string;
@@ -41,16 +41,17 @@ export const CytoscapeEntityComponent = ({
                 return (
                     <Layout
                         key={index}
+                        id={column.divKeyId ? column.divKeyId : ''}
                         direction="row"
                         style={{
                             width: '30vw'
                         }}
                     >
                         <div
-                            id={column.divKeyId ? column.divKeyId : ''}
                             className={cnMixSpace({ p: 'xs' })}
                             style={{
                                 border: '1px solid black',
+                                borderTop: '2px solid black',
                                 width: '15%'
                             }}
                         >
@@ -63,6 +64,7 @@ export const CytoscapeEntityComponent = ({
                             className={cnMixSpace({ p: 'xs' })}
                             style={{
                                 border: '1px solid black',
+                                borderTop: '2px solid black',
                                 width: '100%'
                             }}
                         >
@@ -72,6 +74,7 @@ export const CytoscapeEntityComponent = ({
                             className={cnMixSpace({ p: 'xs' })}
                             style={{
                                 border: '1px solid black',
+                                borderTop: '2px solid black',
                                 width: '50%'
                             }}
                         >

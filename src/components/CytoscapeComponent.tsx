@@ -30,6 +30,9 @@ export interface CytoscapeComponentProps {
     elements: ReturnType<typeof useGetData>['elements'];
     cyRef: ReturnType<typeof useGetData>['cyRef'];
     containerRef: ReturnType<typeof useGetData>['containerRef'];
+    isWithTemplate: ReturnType<typeof useGetData>['isWithTemplate'];
+    template: ReturnType<typeof useGetData>['template'];
+    isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
@@ -40,6 +43,9 @@ const CytoscapeComponent = ({
     layout,
     cyRef,
     containerRef,
+    isWithTemplate,
+    template,
+    isTemplateLoaded
 }: CytoscapeComponentProps) => {
 
     useEffect(() => {
@@ -79,6 +85,10 @@ const CytoscapeComponent = ({
                                 'dom': div,
                             },
                             'classes': String(node.classes),
+                            'position': {
+                                'x': 0,
+                                'y': 0,
+                            }
                         });
                     }
                 }
@@ -97,7 +107,15 @@ const CytoscapeComponent = ({
                 }
             });
 
-            cyRef.current?.layout(layout).run();
+            if (!isWithTemplate || !isTemplateLoaded) {
+                cyRef.current?.layout(layout).run();
+            } else if (isTemplateLoaded && isWithTemplate) {
+                cyRef.current?.nodes().forEach(node => {
+                    const localTemplate = template.find(temp => temp.name === node.data().id);
+                    node.position().x = Number(localTemplate?.position.x);
+                    node.position().y = Number(localTemplate?.position.y);
+                })
+            }
 
             // Очистка при размонтировании компонента
             return () => {
@@ -106,7 +124,7 @@ const CytoscapeComponent = ({
                 }
             };
         }
-    }, [elements, style, layout, containerRef, cyRef]);
+    }, [elements, style, layout, containerRef, cyRef, isWithTemplate, template, isTemplateLoaded]);
 
     return (
         <div

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
+import {Template} from "../types/template.types.ts";
 
 export const useGetData = () => {
     const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
@@ -8,10 +9,15 @@ export const useGetData = () => {
     const cyRef = useRef<Core | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [elements, setElements] = useState<ElementsDefinition>({ nodes: [], edges: [] });
+    const [template, setTemplate] = useState<Template[]>([]);
+    const [isTemplateLoaded, setIsTemplateLoaded] = useState<boolean>(false);
+    const [isWithTemplate, setIsWithTemplate] = useState<boolean>(false);
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const [isOpenDownloadJSONModal, setIsOpenDownloadJSONModal] = useState<boolean>(false);
     const [downloadFileName, setDownloadFileName] = useState<string | null>(null);
+    const [fileJSONName, setFileJSONName] = useState<string | null>(null);
+    const [fileTemplateName, setFileTemplateName] = useState<string | null>(null);
 
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
@@ -19,11 +25,11 @@ export const useGetData = () => {
         }
     }, [elements]);
 
-    const handleFileUpload = useCallback(() => {
-        // setUpdateFlag(false);
+    const handleJSONFileUpload = useCallback(() => {
         const jsonFileInput = document.getElementById('jsonFileInput') as HTMLInputElement;
         if (jsonFileInput.files && jsonFileInput.files.length > 0) {
-            const file = jsonFileInput.files[0];
+            const jsonFile = jsonFileInput.files[0];
+            setFileJSONName(jsonFile.name);
             const reader = new FileReader();
             reader.onload = (e) => {
                 const content = e.target?.result as string;
@@ -35,9 +41,29 @@ export const useGetData = () => {
                     console.error('Ошибка при парсинге JSON:', error);
                 }
             };
-            reader.readAsText(file);
+            reader.readAsText(jsonFile);
         }
     }, [JSONToElementFormatter]);
+
+    const handleTemplateFileUpload = useCallback(() => {
+        const templateFileInput = document.getElementById('templateFileInput') as HTMLInputElement;
+        if (templateFileInput.files && templateFileInput.files.length > 0) {
+            const templateFile = templateFileInput.files[0];
+            setFileTemplateName(templateFile.name);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target?.result as string;
+                try {
+                    const parsedElements = JSON.parse(content);
+                    setTemplate(parsedElements);
+                    setIsTemplateLoaded(true);
+                } catch (error) {
+                    console.error('Ошибка при парсинге JSON:', error);
+                }
+            };
+            reader.readAsText(templateFile);
+        }
+    }, []);
 
     const handleJSONDownload = useCallback(() => {
         if (cyRef.current) {
@@ -73,6 +99,11 @@ export const useGetData = () => {
         }
     }, [ElementToJSONFormatter, downloadFileName, elements, getPositionForEntity]);
 
+    const onOpen = useCallback(() => {
+        setDownloadFileName(null);
+        setIsOpenDownloadJSONModal(true);
+    }, []);
+
     const onCancel = useCallback(() => {
         setDownloadFileName(null);
         setIsOpenDownloadJSONModal(false);
@@ -80,20 +111,28 @@ export const useGetData = () => {
 
     const onAccept = useCallback(() => {
         handleJSONDownload();
-    }, [handleJSONDownload]);
+        onCancel();
+    }, [handleJSONDownload, onCancel]);
 
     return {
         elements,
         cyRef,
         containerRef,
-        handleFileUpload,
+        handleJSONFileUpload,
+        handleTemplateFileUpload,
         handleJSONDownload,
         updateFlag,
         isOpenDownloadJSONModal,
-        setIsOpenDownloadJSONModal,
         downloadFileName,
         setDownloadFileName,
+        onOpen,
         onCancel,
-        onAccept
+        onAccept,
+        isWithTemplate,
+        setIsWithTemplate,
+        template,
+        isTemplateLoaded,
+        fileJSONName,
+        fileTemplateName
     }
 };

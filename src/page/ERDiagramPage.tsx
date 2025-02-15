@@ -9,14 +9,21 @@ export const ERDiagramPage = () => {
         elements,
         cyRef,
         containerRef,
-        handleFileUpload,
+        handleJSONFileUpload,
+        handleTemplateFileUpload,
         updateFlag,
         isOpenDownloadJSONModal,
-        setIsOpenDownloadJSONModal,
         downloadFileName,
         setDownloadFileName,
+        onOpen,
         onCancel,
-        onAccept
+        onAccept,
+        isWithTemplate,
+        setIsWithTemplate,
+        template,
+        isTemplateLoaded,
+        fileJSONName,
+        fileTemplateName
     } = useGetData();
 
     return (
@@ -24,14 +31,20 @@ export const ERDiagramPage = () => {
             direction="column"
         >
             <Toolbar
-                handleFileUpload={handleFileUpload}
+                handleJSONFileUpload={handleJSONFileUpload}
+                handleTemplateFileUpload={handleTemplateFileUpload}
                 updateFlag={updateFlag}
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
                 isOpenDownloadJSONModal={isOpenDownloadJSONModal}
-                setIsOpenDownloadJSONModal={setIsOpenDownloadJSONModal}
+                onOpen={onOpen}
                 onCancel={onCancel}
                 onAccept={onAccept}
+                isWithTemplate={isWithTemplate}
+                setIsWithTemplate={setIsWithTemplate}
+                isTemplateLoaded={isTemplateLoaded}
+                fileJSONName={fileJSONName}
+                fileTemplateName={fileTemplateName}
             />
             <CytoscapeComponent
                 cyRef={cyRef}
@@ -39,6 +52,9 @@ export const ERDiagramPage = () => {
                 elements={elements}
                 style={STYLE}
                 layout={LAYOUT}
+                isWithTemplate={isWithTemplate}
+                template={template}
+                isTemplateLoaded={isTemplateLoaded}
             />
         </Layout>
     );

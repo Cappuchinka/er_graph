@@ -55,14 +55,14 @@ export const AttributesOfEntityTable = ({
                             color: 'white',
                         }}
                     >
-                        Target Table: {edge.data.targetTable}
+                        Source Field: {edge.data.sourceField}
                     </Text>
                     <Text
                         style={{
                             color: 'white',
                         }}
                     >
-                        Source Field: {edge.data.sourceField}
+                        Target Table: {edge.data.targetTable}
                     </Text>
                     <Text
                         style={{

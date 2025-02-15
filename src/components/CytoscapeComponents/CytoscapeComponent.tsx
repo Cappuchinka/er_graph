@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import {useCallback, useEffect} from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -74,8 +74,6 @@ const CytoscapeComponent = ({
                         />
                     );
 
-                    // console.log(node);
-
                     const div = document.createElement("div");
                     div.id = String(node.data.id).toUpperCase();
                     const root = createRoot(div);
@@ -96,38 +94,42 @@ const CytoscapeComponent = ({
                     }
                 }
             });
-
-            edges.forEach(edge => {
-                if (cyRef.current) {
-                    cyRef.current.add({
-                        data: {
-                            'source': edge.data.sourceTable,
-                            'target': edge.data.targetTable,
-                            'label': edge.data.label,
-                            'type': edge.data.type
-                        }
-                    });
-                }
-            });
-
-            if (!isWithTemplate || !isTemplateLoaded) {
-                cyRef.current?.layout(layout).run();
-            } else if (isTemplateLoaded && isWithTemplate) {
-                cyRef.current?.nodes().forEach(node => {
-                    const localTemplate = template.find(temp => temp.name === node.data().id);
-                    node.position().x = Number(localTemplate?.position.x);
-                    node.position().y = Number(localTemplate?.position.y);
-                })
-            }
-
-            // Очистка при размонтировании компонента
-            return () => {
-                if (cyRef.current) {
-                    cyRef.current.destroy();
-                }
-            };
         }
     }, [elements, style, layout, containerRef, cyRef, isWithTemplate, template, isTemplateLoaded]);
+
+    useEffect(() => {
+        elements.edges.forEach(edge => {
+            if (cyRef.current) {
+                cyRef.current.add({
+                    data: {
+                        'source': edge.data.sourceTable,
+                        'target': edge.data.targetTable,
+                        'label': edge.data.label,
+                        'type': edge.data.type
+                    }
+                });
+            }
+        });
+
+        if (!isWithTemplate || !isTemplateLoaded) {
+            cyRef.current?.layout(layout).run();
+        } else if (isTemplateLoaded && isWithTemplate) {
+            cyRef.current?.nodes().forEach(node => {
+                const localTemplate = template.find(temp => temp.name === node.data().id);
+                node.position().x = Number(localTemplate?.position.x);
+                node.position().y = Number(localTemplate?.position.y);
+            })
+        }
+    }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);
+
+    useEffect(() => {
+        // Очистка при размонтировании компонента
+        return () => {
+            if (cyRef.current) {
+                cyRef.current.destroy();
+            }
+        };
+    }, [cyRef]);
 
     return (
         <div

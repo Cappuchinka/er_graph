@@ -66,7 +66,7 @@ export const KeyTooltip = ({
                 </Layout>
             );
         } else {
-            return <></>;
+            return null;
         }
     }
 

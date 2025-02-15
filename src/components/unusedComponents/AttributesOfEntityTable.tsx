@@ -1,4 +1,4 @@
-import { TAttribute, TAttributeRow } from '../types/elements.types.ts';
+import { TAttribute, TAttributeRow } from '../../types/elements.types.ts';
 import { Text } from '@consta/uikit/Text';
 import { rcTableAdapter } from '@consta/rc-table-adapter/rcTableAdapter';
 import RCTable, { ColumnType, TableProps } from 'rc-table';

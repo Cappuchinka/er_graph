@@ -14,9 +14,9 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 // @ts-expect-error
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
-import { useGetData } from '../hooks/useGetData.ts';
-import { Classes } from '../types/elements.types.ts';
-import EntityComponent from './EntityComponent.tsx';
+import { useGetData } from '../../hooks/useGetData.ts';
+import { Classes } from '../../types/elements.types.ts';
+import CytoscapeEntityComponent from './CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
 
 // Регистрация расширения для макета
@@ -67,14 +67,17 @@ const CytoscapeComponent = ({
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
                     const entityComponent = (
-                        <EntityComponent
+                        <CytoscapeEntityComponent
                             entityName={String(node.data.id)}
                             columns={node.data.attributes}
                             edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
                         />
                     );
 
+                    // console.log(node);
+
                     const div = document.createElement("div");
+                    div.id = String(node.data.id).toUpperCase();
                     const root = createRoot(div);
                     root.render(entityComponent);
 
@@ -131,7 +134,7 @@ const CytoscapeComponent = ({
             ref={containerRef}
             style={{
                 width: '100vw',
-                height: '100vw'
+                height: '100vh'
             }}
             className={cnMixSpace({ m: 0, p: 0 })}
         />

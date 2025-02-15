@@ -1,6 +1,6 @@
 import { Layout } from '@consta/uikit/Layout';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
-import CytoscapeComponent from '../components/CytoscapeComponent.tsx';
+import CytoscapeComponent from '../components/CytoscapeComponents/CytoscapeComponent.tsx';
 import Toolbar from '../components/Toolbar.tsx';
 import { useGetData } from '../hooks/useGetData.ts';
 

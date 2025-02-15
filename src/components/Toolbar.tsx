@@ -18,7 +18,7 @@ export interface ToolbarProps {
     onCancel: ReturnType<typeof useGetData>['onCancel'];
     onAccept: ReturnType<typeof useGetData>['onAccept'];
     isWithTemplate: ReturnType<typeof useGetData>['isWithTemplate'];
-    setIsWithTemplate: ReturnType<typeof useGetData>['setIsWithTemplate'];
+    handleSwitch: ReturnType<typeof useGetData>['handleSwitch'];
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
@@ -35,7 +35,7 @@ export const Toolbar = ({
     onCancel,
     onAccept,
     isWithTemplate,
-    setIsWithTemplate,
+    handleSwitch,
     isTemplateLoaded,
     fileJSONName,
     fileTemplateName
@@ -76,9 +76,7 @@ export const Toolbar = ({
                     <FileField
                         id="jsonFileInput"
                         accept="application/json"
-                        onChange={() => {
-                            handleJSONFileUpload();
-                        }}
+                        onChange={handleJSONFileUpload}
                     >
                         {(props) => <Button {...props} label="Загрузить JSON" />}
                     </FileField>
@@ -87,9 +85,7 @@ export const Toolbar = ({
                         id="templateFileInput"
                         accept=".template"
                         disabled={!isWithTemplate}
-                        onChange={() => {
-                            handleTemplateFileUpload();
-                        }}
+                        onChange={handleTemplateFileUpload}
                         className={cnMixSpace({ mL: 's' })}
                     >
                         {(props) => <Button {...props} view={isWithTemplate ? 'primary' : 'ghost'} style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }} label="Загрузить Шаблон" />}
@@ -110,11 +106,8 @@ export const Toolbar = ({
 
                         <Switch
                             size="l"
-                            // label="Шаблон"
                             checked={isWithTemplate}
-                            onChange={() => {
-                                setIsWithTemplate(!isWithTemplate);
-                            }}
+                            onChange={handleSwitch}
                             className={cnMixSpace({ mL: 'xs' })}
                         />
                     </Layout>

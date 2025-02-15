@@ -19,7 +19,7 @@ export const ERDiagramPage = () => {
         onCancel,
         onAccept,
         isWithTemplate,
-        setIsWithTemplate,
+        handleSwitch,
         template,
         isTemplateLoaded,
         fileJSONName,
@@ -41,7 +41,7 @@ export const ERDiagramPage = () => {
                 onCancel={onCancel}
                 onAccept={onAccept}
                 isWithTemplate={isWithTemplate}
-                setIsWithTemplate={setIsWithTemplate}
+                handleSwitch={handleSwitch}
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}
                 fileTemplateName={fileTemplateName}

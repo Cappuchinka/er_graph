@@ -30,6 +30,9 @@ export const useGetData = () => {
         if (jsonFileInput.files && jsonFileInput.files.length > 0) {
             const jsonFile = jsonFileInput.files[0];
             setFileJSONName(jsonFile.name);
+            setTemplate([]);
+            setIsTemplateLoaded(false);
+            setIsWithTemplate(false);
             const reader = new FileReader();
             reader.onload = (e) => {
                 const content = e.target?.result as string;
@@ -99,6 +102,10 @@ export const useGetData = () => {
         }
     }, [ElementToJSONFormatter, downloadFileName, elements, getPositionForEntity]);
 
+    const handleSwitch = useCallback(() => {
+        setIsWithTemplate(!isWithTemplate)
+    }, [isWithTemplate]);
+
     const onOpen = useCallback(() => {
         setDownloadFileName(null);
         setIsOpenDownloadJSONModal(true);
@@ -129,7 +136,7 @@ export const useGetData = () => {
         onCancel,
         onAccept,
         isWithTemplate,
-        setIsWithTemplate,
+        handleSwitch,
         template,
         isTemplateLoaded,
         fileJSONName,

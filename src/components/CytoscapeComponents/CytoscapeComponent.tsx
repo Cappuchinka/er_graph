@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -18,6 +18,8 @@ import { useGetData } from '../../hooks/useGetData.ts';
 import { Classes } from '../../types/elements.types.ts';
 import CytoscapeEntityComponent from './CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
+import EdgeTooltip from "../EdgeTooltip.tsx";
+import {Layout} from "@consta/uikit/Layout";
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -47,6 +49,7 @@ const CytoscapeComponent = ({
     template,
     isTemplateLoaded
 }: CytoscapeComponentProps) => {
+    const [tooltip, setTooltip] = useState<{ content: string; x: number; y: number } | null>(null);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -126,24 +129,26 @@ const CytoscapeComponent = ({
                 node.position().y = Number(localTemplate?.position.y);
             })
         }
-    }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);
 
-    // useEffect(() => {
-    //     // Дополнительные настройки и обработчики событий
-    //     if (cyRef.current) {
-    //         cyRef.current.on('tap', 'edge', function(evt) {
-    //             const node = evt.target;
-    //             console.log('Выбрано ребро:', node.data());
-    //             const targetRow = document.getElementById(node.data().targetInfo);
-    //             const sourceRow = document.getElementById(node.data().sourceInfo);
-    //
-    //             if (targetRow && sourceRow) {
-    //                 targetRow.style.backgroundColor = "FF0000";
-    //                 sourceRow.style.backgroundColor = "FF0000";
-    //             }
-    //         });
-    //     }
-    // }, [cyRef]);
+        // Дополнительные настройки и обработчики событий
+        if (cyRef.current) {
+            // Обработчик события наведения на ребро
+            cyRef.current.on('mouseover', 'edge', (event) => {
+                const edge = event.target;
+                const position = event.renderedPosition;
+                setTooltip({
+                    content: `${edge.data().sourceTable} => ${edge.data().targetTable} : ${edge.data().sourceField} => ${edge.data().targetField}`,
+                    x: position.x,
+                    y: position.y
+                });
+            });
+
+            // Обработчик события ухода с ребра
+            cyRef.current.on('mouseout', 'edge', () => {
+                setTooltip(null);
+            });
+        }
+    }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);
 
     useEffect(() => {
         // Очистка при размонтировании компонента
@@ -155,14 +160,33 @@ const CytoscapeComponent = ({
     }, [cyRef]);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                width: '100vw',
-                height: '100vh'
-            }}
-            className={cnMixSpace({ m: 0, p: 0 })}
-        />
+        <>
+            <div
+                ref={containerRef}
+                style={{
+                    width: '100vw',
+                    height: '100vh'
+                }}
+                className={cnMixSpace({ m: 0, p: 0 })}
+            />
+            {tooltip && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        left: tooltip.x + 10,
+                        top: tooltip.y + 10,
+                        backgroundColor: 'white',
+                        border: '1px solid #ccc',
+                        padding: '5px',
+                        borderRadius: '3px',
+                        boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+                        zIndex: 1000
+                    }}
+                >
+                    {tooltip.content}
+                </div>
+            )}
+        </>
     );
 };
 

@@ -1,4 +1,4 @@
-import { TAttribute, TAttributeRow } from '../types/elements.types.ts';
+import { TAttribute, TAttributeRow } from '../../types/elements.types.ts';
 import { Text } from '@consta/uikit/Text';
 import { rcTableAdapter } from '@consta/rc-table-adapter/rcTableAdapter';
 import RCTable, { ColumnType, TableProps } from 'rc-table';
@@ -55,14 +55,14 @@ export const AttributesOfEntityTable = ({
                             color: 'white',
                         }}
                     >
-                        Target Table: {edge.data.targetTable}
+                        Source Field: {edge.data.sourceField}
                     </Text>
                     <Text
                         style={{
                             color: 'white',
                         }}
                     >
-                        Source Field: {edge.data.sourceField}
+                        Target Table: {edge.data.targetTable}
                     </Text>
                     <Text
                         style={{

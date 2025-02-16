@@ -1,11 +1,8 @@
-import { EdgeDefinition, NodeDataDefinition, NodeDefinition } from 'cytoscape';
+import { EdgeDefinition, NodeDefinition } from 'cytoscape';
 
 export enum Classes {
     ENTITY = 'entity',
     ATTRIBUTE = 'attribute',
-}
-
-export interface NodeData extends NodeDataDefinition {
 }
 
 export interface Attribute extends NodeDefinition {
@@ -14,6 +11,11 @@ export interface Attribute extends NodeDefinition {
 }
 
 export interface TAttribute {
+    name: string;
+    type: string;
+    isPK: boolean;
+    divKeyId: string | null;
+    key: string | null;
     [key: string]: any;
 }
 

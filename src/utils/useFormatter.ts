@@ -1,14 +1,24 @@
-import { Attribute, Classes, Edge, Entity } from '../types/elements.types.ts';
-import { InputJSON } from '../types/json.types.ts';
-import { ElementsDefinition } from 'cytoscape';
+import { Attribute, Classes, Edge, Entity, TAttribute } from '../types/elements.types.ts';
+import { EntityJSON, InputJSON, ReferenceJSON } from '../types/json.types.ts';
+import {ElementsDefinition, NodeDefinition} from 'cytoscape';
+import {Template} from "../types/template.types.ts";
 
 const formatter: {
     referenceTypeFormatter: (
         type: string,
     ) => string;
+    reverseReferenceTypeFormatter: (
+        type: string,
+    ) => string;
     JSONToElementFormatter: (
         json: InputJSON
     ) => ElementsDefinition;
+    ElementToJSONFormatter: (
+        elements: ElementsDefinition,
+    ) => InputJSON;
+    getPositionForEntity: (
+        graph: ElementsDefinition,
+    ) => Template[];
 } = {
     referenceTypeFormatter: (type: string) => {
         let result = '';
@@ -24,6 +34,24 @@ const formatter: {
                 break;
             case 'ManyToMany':
                 result = 'N:N';
+                break;
+        }
+        return result;
+    },
+    reverseReferenceTypeFormatter: (type: string) => {
+        let result = '';
+        switch (type) {
+            case '1:1':
+                result = 'OneToOne';
+                break;
+            case '1:N':
+                result = 'OneToMany';
+                break;
+            case 'N:1':
+                result = 'ManyToOne';
+                break;
+            case 'N:N':
+                result = 'ManyToMany';
                 break;
         }
         return result;
@@ -81,7 +109,7 @@ const formatter: {
         });
 
         entities.forEach((entity) => {
-            const newEntityAttributes = entity.data.attributes.map((entAttr: any, index: number) => {
+            const newEntityAttributes = entity.data.attributes.map((entAttr: TAttribute, index: number) => {
                 return {
                     ...entAttr,
                     divKeyId: entAttr.key ? attributes.filter(attr => attr.data.parent === entity.data.id)[index].data.id : null
@@ -92,7 +120,7 @@ const formatter: {
 
         let i = 0;
         entities.map((entity) => {
-            entity.data.attributes.map((attr) => {
+            entity.data.attributes.map((attr: TAttribute) => {
                 attributes[i].data.key = attr.key;
                 i++;
             })
@@ -108,8 +136,62 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        console.log(elements);
+        // console.log(elements);
         return elements;
+    },
+    ElementToJSONFormatter: (elements: ElementsDefinition) => {
+        const result: InputJSON = {
+            entities: [] as EntityJSON[],
+            references: [] as ReferenceJSON[]
+        };
+
+        const edges: Edge[] = elements.edges;
+        const nodes: NodeDefinition[] = elements.nodes;
+
+        edges.forEach(edge => {
+            result.references.push({
+                source: {
+                    table: edge.data.sourceTable,
+                    field: edge.data.sourceField,
+                },
+                target: {
+                    table: edge.data.targetTable,
+                    field: edge.data.targetField
+                },
+                type: edge.data.type
+            });
+        });
+
+        nodes.forEach(node => {
+            if (node.classes === Classes.ENTITY) {
+                result.entities.push({
+                    name: String(node.data.id),
+                    columns: node.data.attributes.map((attr: TAttribute) => {
+                        const { key, divKeyId, ...rest } = attr;
+                        return rest;
+                    })
+                });
+            }
+        });
+
+        return result;
+    },
+    getPositionForEntity: (graph: ElementsDefinition) => {
+        const result: Template[] = [];
+        const nodes = graph.nodes;
+        nodes.forEach(node => {
+            if (node.classes === Classes.ENTITY) {
+                result.push({
+                    name: String(node.data.id),
+                    position: {
+                        x: Number(node.position?.x),
+                        y: Number(node.position?.y)
+                    }
+                });
+            }
+        });
+        
+        return result;
     }
 };
 

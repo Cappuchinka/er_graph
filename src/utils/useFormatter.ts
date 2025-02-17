@@ -1,7 +1,7 @@
 import { Attribute, Classes, Edge, Entity, TAttribute } from '../types/elements.types.ts';
 import { EntityJSON, InputJSON, ReferenceJSON } from '../types/json.types.ts';
-import {ElementsDefinition, NodeDefinition} from 'cytoscape';
-import {Template} from "../types/template.types.ts";
+import { ElementsDefinition, NodeDefinition } from 'cytoscape';
+import { Template } from '../types/utils.types.ts';
 
 const formatter: {
     referenceTypeFormatter: (
@@ -167,6 +167,7 @@ const formatter: {
                 result.entities.push({
                     name: String(node.data.id),
                     columns: node.data.attributes.map((attr: TAttribute) => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         const { key, divKeyId, ...rest } = attr;
                         return rest;
                     })

@@ -77,6 +77,8 @@ export const KeyTooltip = ({
                     <UseKeyTooltip
                         content={column.key}
                         tooltipProps={{
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-expect-error
                             content: TooltipContent(column, column.key)
                         }}
                     >

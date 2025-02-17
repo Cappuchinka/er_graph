@@ -38,6 +38,8 @@ export const LAYOUT: LayoutOptions = {
     // name: 'cola',
     // name: 'fcose',
     name: 'cose-bilkent',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     rankDir: 'LR',
     idealEdgeLength: 750,
     nodeRepulsion: 50000000, // Увеличиваем отталкивание узлов

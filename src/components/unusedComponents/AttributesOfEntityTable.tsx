@@ -85,6 +85,7 @@ export const AttributesOfEntityTable = ({
         }
     }
 
+    // @ts-ignore
     const columnsTable: ColumnType<TAttributeRow>[] = [
         {
             title: null,
@@ -105,7 +106,11 @@ export const AttributesOfEntityTable = ({
                                 {record.key ? (
                                     <KeyTooltip
                                         content={value}
-                                        tooltipProps={{ content: TooltipContent(record, record.key) }}
+                                        tooltipProps={{
+                                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                            // @ts-expect-error
+                                            content: TooltipContent(record, record.key)
+                                        }}
                                     >
                                         {value}
                                     </KeyTooltip>

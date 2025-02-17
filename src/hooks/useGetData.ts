@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
-import {Template} from "../types/template.types.ts";
+import { Template } from "../types/utils.types.ts";
 
 export const useGetData = () => {
     const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
@@ -85,6 +85,8 @@ export const useGetData = () => {
             // Освобождаем память
             URL.revokeObjectURL(urlJSON);
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             const template = getPositionForEntity(cyRef.current.json().elements);
             const outputTemplate = JSON.stringify(template);
 

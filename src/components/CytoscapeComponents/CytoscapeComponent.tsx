@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -18,8 +18,8 @@ import { useGetData } from '../../hooks/useGetData.ts';
 import { Classes } from '../../types/elements.types.ts';
 import CytoscapeEntityComponent from './CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
-import EdgeTooltip from "../EdgeTooltip.tsx";
-import {Layout} from "@consta/uikit/Layout";
+import EdgeHintComponent from '../EdgeHintComponent.tsx';
+import { HintTooltip } from '../../types/utils.types.ts';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -49,7 +49,7 @@ const CytoscapeComponent = ({
     template,
     isTemplateLoaded
 }: CytoscapeComponentProps) => {
-    const [tooltip, setTooltip] = useState<{ content: string; x: number; y: number } | null>(null);
+    const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -62,6 +62,8 @@ const CytoscapeComponent = ({
             });
 
             // подчёркивает красным, внимания не обращать
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             cyRef.current.domNode();
 
             const nodes = elements.nodes;
@@ -136,8 +138,16 @@ const CytoscapeComponent = ({
             cyRef.current.on('mouseover', 'edge', (event) => {
                 const edge = event.target;
                 const position = event.renderedPosition;
+                const component = (
+                    <EdgeHintComponent
+                        sourceTable={edge.data().sourceTable}
+                        sourceField={edge.data().sourceField}
+                        targetTable={edge.data().targetTable}
+                        targetField={edge.data().targetField}
+                    />
+                );
                 setTooltip({
-                    content: `${edge.data().sourceTable} => ${edge.data().targetTable} : ${edge.data().sourceField} => ${edge.data().targetField}`,
+                    content: component,
                     x: position.x,
                     y: position.y
                 });

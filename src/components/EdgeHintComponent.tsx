@@ -7,6 +7,7 @@ export interface EdgeHintComponentProps {
     sourceField: string;
     targetTable: string;
     targetField: string;
+    type: string;
 }
 
 export const EdgeHintComponent = ({
@@ -14,6 +15,7 @@ export const EdgeHintComponent = ({
     sourceField,
     targetTable,
     targetField,
+    type,
 }: EdgeHintComponentProps) => {
     return (
         <Layout
@@ -30,6 +32,7 @@ export const EdgeHintComponent = ({
                 </Text>
                 <Text>{`${sourceTable} ==> ${targetTable}`}</Text>
             </Layout>
+
             <Layout
                 direction="row"
             >
@@ -40,6 +43,18 @@ export const EdgeHintComponent = ({
                     Attributes:
                 </Text>
                 <Text>{`${sourceField} ==> ${targetField}`}</Text>
+            </Layout>
+
+            <Layout
+                direction="row"
+            >
+                <Text
+                    weight="bold"
+                    className={cnMixSpace({ mR: '2xs' })}
+                >
+                    Type:
+                </Text>
+                <Text>{type}</Text>
             </Layout>
         </Layout>
     );

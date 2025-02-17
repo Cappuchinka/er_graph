@@ -144,6 +144,7 @@ const CytoscapeComponent = ({
                         sourceField={edge.data().sourceField}
                         targetTable={edge.data().targetTable}
                         targetField={edge.data().targetField}
+                        type={edge.data().type}
                     />
                 );
                 setTooltip({
@@ -156,6 +157,30 @@ const CytoscapeComponent = ({
             // Обработчик события ухода с ребра
             cyRef.current.on('mouseout', 'edge', () => {
                 setTooltip(null);
+            });
+        }
+
+        if (cyRef.current) {
+            cyRef.current.on('tap', (event) => {
+                const edge = event.target;
+
+                cyRef.current?.nodes().forEach(node => {
+                    node?.style('border-color', '#000000');
+                    node?.style('border-width', 2);
+                });
+
+                if (edge !== cyRef.current) {
+                    const sourceTable = edge.data().sourceTable;
+                    const targetTable = edge.data().targetTable;
+                    const sourceNode = cyRef.current?.$(`#${sourceTable}`);
+                    const targetNode = cyRef.current?.$(`#${targetTable}`);
+
+                    sourceNode?.style('border-color', '#FF0000');
+                    targetNode?.style('border-color', '#FF0000');
+
+                    sourceNode?.style('border-width', 15);
+                    targetNode?.style('border-width', 15);
+                }
             });
         }
     }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);

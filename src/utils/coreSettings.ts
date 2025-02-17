@@ -4,11 +4,12 @@ export const STYLE: Stylesheet[] = [
     {
         selector: 'node.entity',
         style: {
-            'width': 400,
-            'height': 40,
+            'width': 100,
+            'height': 100,
             'text-valign': 'center',
             'shape': 'rectangle',
             'border-width': 2,
+            'border-color': '#000'
         }
     },
     {

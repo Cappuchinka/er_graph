@@ -2,13 +2,17 @@ import { Layout } from '@consta/uikit/Layout';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
 import CytoscapeComponent from '../components/CytoscapeComponents/CytoscapeComponent.tsx';
 import Toolbar from '../components/Toolbar.tsx';
-import { useGetData } from '../hooks/useGetData.ts';
+import { useGetData } from '../hooks/useGetData.tsx';
 
 export const ERDiagramPage = () => {
     const {
         elements,
         cyRef,
         containerRef,
+        tooltip,
+        initializeEntities,
+        initializeEdges,
+        destroyGraph,
         handleJSONFileUpload,
         handleTemplateFileUpload,
         updateFlag,
@@ -49,12 +53,16 @@ export const ERDiagramPage = () => {
             <CytoscapeComponent
                 cyRef={cyRef}
                 containerRef={containerRef}
+                tooltip={tooltip}
                 elements={elements}
                 style={STYLE}
                 layout={LAYOUT}
                 isWithTemplate={isWithTemplate}
                 template={template}
                 isTemplateLoaded={isTemplateLoaded}
+                initializeEntities={initializeEntities}
+                initializeEdges={initializeEdges}
+                destroyGraph={destroyGraph}
             />
         </Layout>
     );

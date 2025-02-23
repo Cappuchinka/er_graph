@@ -4,6 +4,7 @@ import { ContextMenu } from '@consta/uikit/ContextMenu';
 import { EntityItemsContextMenu } from '../types/elements.types.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { IconDown } from '@consta/icons/IconDown';
+import { Checkbox } from '@consta/uikit/Checkbox';
 
 export interface EntitiesListProps {
     items: EntityItemsContextMenu[]
@@ -23,6 +24,18 @@ export const EntitiesList = ({
                 className={cnMixSpace({ mL: 'xs' })}
             />
         );
+    };
+
+    const renderLeftSide = () => {
+        const nodeArray = [];
+
+        nodeArray.push(
+            <Checkbox
+                checked={true}
+            />
+        );
+
+        return nodeArray;
     };
 
     return (
@@ -45,6 +58,7 @@ export const EntitiesList = ({
                 onClickOutside={() => {
                     setIsOpen(false);
                 }}
+                getItemLeftSide={() => renderLeftSide()}
                 getItemKey={item => item.id}
                 getItemLabel={item => item.label}
             />

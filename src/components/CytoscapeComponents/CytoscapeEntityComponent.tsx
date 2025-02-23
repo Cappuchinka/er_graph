@@ -44,7 +44,7 @@ export const CytoscapeEntityComponent = ({
                         id={column.divKeyId ? column.divKeyId : ''}
                         direction="row"
                         style={{
-                            width: '30vw'
+                            width: '50vw'
                         }}
                     >
                         <div

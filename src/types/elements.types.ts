@@ -34,4 +34,5 @@ export interface Edge extends EdgeDefinition {
 export interface EntityItemsContextMenu {
     id: string;
     label: string;
+    isShow: boolean;
 }

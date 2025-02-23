@@ -5,13 +5,16 @@ import { EntityItemsContextMenu } from '../types/elements.types.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { IconDown } from '@consta/icons/IconDown';
 import { Checkbox } from '@consta/uikit/Checkbox';
+import { useGetData } from '../hooks/useGetData.tsx';
 
 export interface EntitiesListProps {
-    items: EntityItemsContextMenu[]
+    entityItems: ReturnType<typeof useGetData>['entityItems'];
+    handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
 }
 
 export const EntitiesList = ({
-    items,
+    entityItems,
+    handleCheckbox
 }: EntitiesListProps) => {
     const ref = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -26,12 +29,16 @@ export const EntitiesList = ({
         );
     };
 
-    const renderLeftSide = () => {
+    const renderLeftSide = (
+        item: EntityItemsContextMenu,
+        onChange: (item: EntityItemsContextMenu) => void
+    ) => {
         const nodeArray = [];
 
         nodeArray.push(
             <Checkbox
-                checked={true}
+                checked={item.isShow}
+                onChange={() => onChange(item)}
             />
         );
 
@@ -41,7 +48,7 @@ export const EntitiesList = ({
     return (
         <>
             <Button
-                disabled={items.length === 0}
+                disabled={entityItems.length === 0}
                 ref={ref}
                 view="secondary"
                 label="Список сущностей"
@@ -54,11 +61,11 @@ export const EntitiesList = ({
                 isOpen={isOpen}
                 anchorRef={ref}
                 direction="downStartLeft"
-                items={items}
+                items={entityItems}
                 onClickOutside={() => {
                     setIsOpen(false);
                 }}
-                getItemLeftSide={() => renderLeftSide()}
+                getItemLeftSide={item => renderLeftSide(item, handleCheckbox)}
                 getItemKey={item => item.id}
                 getItemLabel={item => item.label}
             />

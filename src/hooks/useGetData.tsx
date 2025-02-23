@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import cytoscape, { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { HintTooltip, Template } from '../types/utils.types.ts';
-import {Classes, Entity, EntityItemsContextMenu} from '../types/elements.types.ts';
+import { Classes, EntityItemsContextMenu } from '../types/elements.types.ts';
 import CytoscapeEntityComponent from '../components/CytoscapeComponents/CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
@@ -85,7 +85,8 @@ export const useGetData = () => {
 
                     localEntityContextItems.push({
                         id: String(node.data.id).toUpperCase(),
-                        label: String(node.data.id)
+                        label: String(node.data.id),
+                        isShow: true
                     });
                 }
             });
@@ -284,6 +285,17 @@ export const useGetData = () => {
         onCancel();
     }, [handleJSONDownload, onCancel]);
 
+    const handleCheckbox = useCallback((item: EntityItemsContextMenu) => {
+        const newItems = entityItems.map((entityItem, index) => {
+            if (item.id === entityItem.id) {
+                return { ...entityItems[index], isShow: !entityItems[index].isShow };
+            }
+            return entityItem;
+        });
+
+        setEntityItems(newItems);
+    }, [entityItems]);
+
     return {
         elements,
         cyRef,
@@ -308,6 +320,7 @@ export const useGetData = () => {
         isTemplateLoaded,
         fileJSONName,
         fileTemplateName,
-        entityItems
+        entityItems,
+        handleCheckbox
     }
 };

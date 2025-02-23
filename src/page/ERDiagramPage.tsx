@@ -27,7 +27,8 @@ export const ERDiagramPage = () => {
         template,
         isTemplateLoaded,
         fileJSONName,
-        fileTemplateName
+        fileTemplateName,
+        entityItems
     } = useGetData();
 
     return (
@@ -49,6 +50,7 @@ export const ERDiagramPage = () => {
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}
                 fileTemplateName={fileTemplateName}
+                entityItems={entityItems}
             />
             <CytoscapeComponent
                 cyRef={cyRef}

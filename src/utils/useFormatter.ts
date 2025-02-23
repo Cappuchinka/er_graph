@@ -1,7 +1,7 @@
-import { Attribute, Classes, Edge, Entity, TAttribute } from '../types/elements.types.ts';
-import { EntityJSON, InputJSON, ReferenceJSON } from '../types/json.types.ts';
-import { ElementsDefinition, NodeDefinition } from 'cytoscape';
-import { Template } from '../types/utils.types.ts';
+import {Attribute, Classes, Edge, Entity, TAttribute} from '../types/elements.types.ts';
+import {EntityJSON, InputJSON, ReferenceJSON} from '../types/json.types.ts';
+import {ElementsDefinition, NodeDefinition} from 'cytoscape';
+import {Template} from '../types/utils.types.ts';
 
 const formatter: {
     referenceTypeFormatter: (
@@ -64,6 +64,7 @@ const formatter: {
         json.references.map(ref => {
             edges.push({
                 data: {
+                    id: `${ref.source.table}_${ref.source.field}_${ref.target.table}_${ref.target.field}`.toUpperCase(),
                     source: `${ref.source.table}_${ref.source.field}`.toUpperCase(),
                     target: `${ref.target.table}_${ref.target.field}`.toUpperCase(),
                     sourceTable: `${ref.source.table}`.toUpperCase(),
@@ -75,6 +76,10 @@ const formatter: {
                 }
             });
         });
+
+        const checkForDivKeyID = (attrName: string) => {
+            return Boolean(edges.find(edge => edge.data.source === attrName) || edges.find(edge => edge.data.target === attrName));
+        };
 
         json.entities.map(entity => {
             const columnsOfEntity = entity.columns.map(column => {
@@ -112,7 +117,7 @@ const formatter: {
             const newEntityAttributes = entity.data.attributes.map((entAttr: TAttribute, index: number) => {
                 return {
                     ...entAttr,
-                    divKeyId: entAttr.key ? attributes.filter(attr => attr.data.parent === entity.data.id)[index].data.id : null
+                    divKeyId: entAttr.key && checkForDivKeyID(`${entity.data.id}_${entAttr.name}`.toUpperCase()) ? attributes.filter(attr => attr.data.parent === entity.data.id)[index].data.id : null
                 }
             });
             entity.data.attributes = newEntityAttributes;

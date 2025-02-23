@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import cytoscape, { Core, ElementsDefinition } from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { HintTooltip, Template } from '../types/utils.types.ts';
-import { Classes } from '../types/elements.types.ts';
+import {Classes, Entity, EntityItemsContextMenu} from '../types/elements.types.ts';
 import CytoscapeEntityComponent from '../components/CytoscapeComponents/CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
@@ -25,6 +25,8 @@ export const useGetData = () => {
     const [fileTemplateName, setFileTemplateName] = useState<string | null>(null);
 
     const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
+
+    const [entityItems, setEntityItems] = useState<EntityItemsContextMenu[]>([]);
 
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
@@ -49,6 +51,8 @@ export const useGetData = () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             cyRef.current.domNode();
+
+            const localEntityContextItems: EntityItemsContextMenu[] = [];
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
@@ -78,8 +82,15 @@ export const useGetData = () => {
                             }
                         });
                     }
+
+                    localEntityContextItems.push({
+                        id: String(node.data.id).toUpperCase(),
+                        label: String(node.data.id)
+                    });
                 }
             });
+
+            setEntityItems(localEntityContextItems);
         }
     }, [edges, nodes]);
 
@@ -296,6 +307,7 @@ export const useGetData = () => {
         template,
         isTemplateLoaded,
         fileJSONName,
-        fileTemplateName
+        fileTemplateName,
+        entityItems
     }
 };

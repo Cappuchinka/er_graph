@@ -72,25 +72,21 @@ export const KeyTooltip = ({
 
     return (
         <>
-            {column.divKeyId ? (
-                column.key ? (
-                    <UseKeyTooltip
-                        content={column.key}
-                        tooltipProps={{
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
-                            content: TooltipContent(column, column.key)
-                        }}
-                    >
-                        {column.key}
-                    </UseKeyTooltip>
-                ) : (
-                    <Text>
-                        {column.key}
-                    </Text>
-                )
+            {column.key ? (
+                <UseKeyTooltip
+                    content={column.key}
+                    tooltipProps={{
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        content: TooltipContent(column, column.key)
+                    }}
+                >
+                    {column.key}
+                </UseKeyTooltip>
             ) : (
-                <></>
+                <Text>
+                    {column.key}
+                </Text>
             )}
         </>
     );

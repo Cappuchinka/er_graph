@@ -30,3 +30,8 @@ export interface Entity extends NodeDefinition {
 
 export interface Edge extends EdgeDefinition {
 }
+
+export interface EntityItemsContextMenu {
+    id: string;
+    label: string;
+}

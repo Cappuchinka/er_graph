@@ -6,6 +6,7 @@ import { useGetData } from '../hooks/useGetData.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import DownloadJSONModal from './DownloadJSONModal.tsx';
 import { Switch } from '@consta/uikit/Switch';
+import EntitiesList from "./EntitiesList.tsx";
 
 export interface ToolbarProps {
     handleJSONFileUpload: ReturnType<typeof useGetData>['handleJSONFileUpload'];
@@ -22,6 +23,7 @@ export interface ToolbarProps {
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
+    entityItems: ReturnType<typeof useGetData>['entityItems'];
 }
 
 export const Toolbar = ({
@@ -38,7 +40,8 @@ export const Toolbar = ({
     handleSwitch,
     isTemplateLoaded,
     fileJSONName,
-    fileTemplateName
+    fileTemplateName,
+    entityItems
 }: ToolbarProps) => {
     return (
         <>
@@ -73,52 +76,65 @@ export const Toolbar = ({
                         alignItems: 'center',
                     }}
                 >
-                    <FileField
-                        id="jsonFileInput"
-                        accept="application/json"
-                        onChange={handleJSONFileUpload}
-                    >
-                        {(props) => <Button {...props} label="Загрузить JSON" />}
-                    </FileField>
-
-                    <FileField
-                        id="templateFileInput"
-                        accept=".template"
-                        disabled={!isWithTemplate}
-                        onChange={handleTemplateFileUpload}
-                        className={cnMixSpace({ mL: 's' })}
-                    >
-                        {(props) => <Button {...props} view={isWithTemplate ? 'primary' : 'ghost'} style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }} label="Загрузить Шаблон" />}
-                    </FileField>
-
                     <Layout
                         direction="row"
-                        style={{
-                            alignItems: 'center',
-                        }}
-                        className={cnMixSpace({ mL: 's' })}
                     >
-                        <Text
-                            size="l"
+                        <FileField
+                            id="jsonFileInput"
+                            accept="application/json"
+                            onChange={handleJSONFileUpload}
                         >
-                            Шаблон
-                        </Text>
+                            {(props) => <Button {...props} label="Загрузить JSON" />}
+                        </FileField>
 
-                        <Switch
-                            size="l"
-                            checked={isWithTemplate}
-                            onChange={handleSwitch}
-                            className={cnMixSpace({ mL: 'xs' })}
+                        <FileField
+                            id="templateFileInput"
+                            accept=".template"
+                            disabled={!isWithTemplate}
+                            onChange={handleTemplateFileUpload}
+                            className={cnMixSpace({ mL: 's' })}
+                        >
+                            {(props) => <Button {...props} view={isWithTemplate ? 'primary' : 'ghost'} style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }} label="Загрузить Шаблон" />}
+                        </FileField>
+
+                        <Layout
+                            direction="row"
+                            style={{
+                                alignItems: 'center',
+                            }}
+                            className={cnMixSpace({ mL: 's' })}
+                        >
+                            <Text
+                                size="l"
+                            >
+                                Шаблон
+                            </Text>
+
+                            <Switch
+                                size="l"
+                                checked={isWithTemplate}
+                                onChange={handleSwitch}
+                                className={cnMixSpace({ mL: 'xs' })}
+                            />
+                        </Layout>
+
+                        <Button
+                            disabled={!updateFlag}
+                            view="secondary"
+                            className={cnMixSpace({ mL: 's' })}
+                            label="Скачать JSON"
+                            onClick={onOpen}
                         />
                     </Layout>
 
-                    <Button
-                        disabled={!updateFlag}
-                        view="secondary"
+                    <Layout
+                        direction="row"
                         className={cnMixSpace({ mL: 's' })}
-                        label="Скачать JSON"
-                        onClick={onOpen}
-                    />
+                    >
+                        <EntitiesList
+                            items={entityItems}
+                        />
+                    </Layout>
                 </Layout>
 
                 <Layout

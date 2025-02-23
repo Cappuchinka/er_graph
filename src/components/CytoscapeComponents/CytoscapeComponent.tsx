@@ -71,9 +71,11 @@ const CytoscapeComponent = ({
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
+                    //console.log(node.data.color)
                     const entityComponent = (
                         <CytoscapeEntityComponent
                             entityName={String(node.data.id)}
+                            color={String(node.data.color)}
                             columns={node.data.attributes}
                             edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
                         />

@@ -72,6 +72,9 @@ export const EntitiesList = ({
                 getItemLeftSide={item => renderLeftSide(item, handleCheckbox)}
                 getItemKey={item => item.data.id}
                 getItemLabel={item => item.data.label}
+                style={{
+                    width: 'max-content',
+                }}
             />
         </>
     );

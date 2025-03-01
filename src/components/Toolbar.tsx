@@ -25,6 +25,7 @@ export interface ToolbarProps {
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
     elements: ReturnType<typeof useGetData>['elements'];
     handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
+    count: ReturnType<typeof useGetData>['count'];
 }
 
 export const Toolbar = ({
@@ -43,7 +44,8 @@ export const Toolbar = ({
     fileJSONName,
     fileTemplateName,
     elements,
-    handleCheckbox
+    handleCheckbox,
+    count
 }: ToolbarProps) => {
     return (
         <>
@@ -136,6 +138,7 @@ export const Toolbar = ({
                         <EntitiesList
                             elements={elements}
                             handleCheckbox={handleCheckbox}
+                            count={count}
                         />
                     </Layout>
                 </Layout>

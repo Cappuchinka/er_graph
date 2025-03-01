@@ -28,7 +28,8 @@ export const ERDiagramPage = () => {
         isTemplateLoaded,
         fileJSONName,
         fileTemplateName,
-        handleCheckbox
+        handleCheckbox,
+        count
     } = useGetData();
 
     return (
@@ -52,6 +53,7 @@ export const ERDiagramPage = () => {
                 fileTemplateName={fileTemplateName}
                 elements={elements}
                 handleCheckbox={handleCheckbox}
+                count={count}
             />
             <CytoscapeComponent
                 cyRef={cyRef}

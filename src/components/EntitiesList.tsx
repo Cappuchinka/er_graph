@@ -5,17 +5,19 @@ import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { IconDown } from '@consta/icons/IconDown';
 import { Checkbox } from '@consta/uikit/Checkbox';
 import { useGetData } from '../hooks/useGetData.tsx';
-import {NodeDefinition} from "cytoscape";
-import {Classes} from "../types/elements.types.ts";
+import { NodeDefinition } from 'cytoscape';
+import { Classes } from '../types/elements.types.ts';
 
 export interface EntitiesListProps {
     elements: ReturnType<typeof useGetData>['elements'];
     handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
+    count: ReturnType<typeof useGetData>['count'];
 }
 
 export const EntitiesList = ({
     elements,
-    handleCheckbox
+    handleCheckbox,
+    count
 }: EntitiesListProps) => {
     const ref = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -38,6 +40,7 @@ export const EntitiesList = ({
 
         nodeArray.push(
             <Checkbox
+                disabled={count === 1 && item.data.isShow}
                 checked={item.data.isShow}
                 onChange={() => onChange(item)}
             />

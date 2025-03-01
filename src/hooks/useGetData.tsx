@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import cytoscape, {Core, ElementsDefinition, NodeDefinition} from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { HintTooltip, Template } from '../types/utils.types.ts';
-import { Classes, EntityItemsContextMenu } from '../types/elements.types.ts';
+import { Classes } from '../types/elements.types.ts';
 import CytoscapeEntityComponent from '../components/CytoscapeComponents/CytoscapeEntityComponent.tsx';
 import { createRoot } from 'react-dom/client';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
@@ -26,12 +26,21 @@ export const useGetData = () => {
 
     const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
 
-    const [entityItems, setEntityItems] = useState<EntityItemsContextMenu[]>([]);
+    const [count, setCount] = useState<number>(0);
 
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
             setUpdateFlag(false);
         }
+
+        let count: number = 0;
+
+        elements.nodes
+            .filter(node => node.classes === Classes.ENTITY)
+            .forEach(node => {
+                if (node.data.isShow) count++;
+            });
+        setCount(count);
     }, [elements]);
 
     const nodes = elements.nodes;
@@ -51,8 +60,6 @@ export const useGetData = () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             cyRef.current.domNode();
-
-            const localEntityContextItems: EntityItemsContextMenu[] = [];
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
@@ -86,17 +93,9 @@ export const useGetData = () => {
                                 }
                             });
                         }
-
-                        localEntityContextItems.push({
-                            id: String(node.data.id).toUpperCase(),
-                            label: String(node.data.id),
-                            isShow: true
-                        });
                     }
                 }
             });
-
-            setEntityItems(localEntityContextItems);
         }
     }, [edges, nodes]);
 
@@ -294,6 +293,13 @@ export const useGetData = () => {
     }, [handleJSONDownload, onCancel]);
 
     const handleCheckbox = useCallback((item: NodeDefinition) => {
+        const localNodes = elements.nodes.map((node) => {
+            if (node.data.id === item.data.id) {
+                return { ...node, data: { ...node.data, isShow: !node.data.isShow} };
+            } else {
+                return node;
+            }
+        });
         const localEdges = elements.edges.map((edge) => {
             if (edge.data.sourceTable === item.data.id || edge.data.targetTable === item.data.id) {
                 return { ...edge, data: { ...edge.data, isShow: !edge.data.isShow} }
@@ -301,14 +307,7 @@ export const useGetData = () => {
                 return edge;
             }
         });
-        const localNodes = elements.nodes.map((node) => {
-           if (node.data.id === item.data.id) {
-               return { ...node, data: { ...node.data, isShow: !node.data.isShow} };
-           } else {
-               return node;
-           }
-        });
-        setElements({ nodes: localNodes, edges: localEdges});
+        setElements({ nodes: localNodes, edges: localEdges });
     }, [elements.edges, elements.nodes]);
 
     return {
@@ -335,7 +334,7 @@ export const useGetData = () => {
         isTemplateLoaded,
         fileJSONName,
         fileTemplateName,
-        entityItems,
-        handleCheckbox
+        handleCheckbox,
+        count
     }
 };

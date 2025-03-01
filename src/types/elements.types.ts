@@ -29,11 +29,4 @@ export interface Entity extends NodeDefinition {
     grabbable?: boolean;
 }
 
-export interface Edge extends EdgeDefinition {
-}
-
-export interface EntityItemsContextMenu {
-    id: string;
-    label: string;
-    isShow: boolean;
-}
+export interface Edge extends EdgeDefinition {}

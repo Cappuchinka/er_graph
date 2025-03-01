@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import cytoscape, { Stylesheet, LayoutOptions } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -15,11 +15,6 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../../hooks/useGetData.ts';
-import { Classes } from '../../types/elements.types.ts';
-import CytoscapeEntityComponent from './CytoscapeEntityComponent.tsx';
-import { createRoot } from 'react-dom/client';
-import EdgeHintComponent from '../EdgeHintComponent.tsx';
-import { HintTooltip } from '../../types/utils.types.ts';
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -32,9 +27,13 @@ export interface CytoscapeComponentProps {
     elements: ReturnType<typeof useGetData>['elements'];
     cyRef: ReturnType<typeof useGetData>['cyRef'];
     containerRef: ReturnType<typeof useGetData>['containerRef'];
+    tooltip: ReturnType<typeof useGetData>['tooltip'];
     isWithTemplate: ReturnType<typeof useGetData>['isWithTemplate'];
     template: ReturnType<typeof useGetData>['template'];
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
+    initializeEntities: ReturnType<typeof useGetData>['initializeEntities'];
+    initializeEdges: ReturnType<typeof useGetData>['initializeEdges'];
+    destroyGraph: ReturnType<typeof useGetData>['destroyGraph'];
     style: Stylesheet[];
     layout: LayoutOptions;
 }
@@ -45,156 +44,36 @@ const CytoscapeComponent = ({
     layout,
     cyRef,
     containerRef,
+    tooltip,
     isWithTemplate,
     template,
-    isTemplateLoaded
+    isTemplateLoaded,
+    initializeEntities,
+    initializeEdges,
+    destroyGraph,
 }: CytoscapeComponentProps) => {
-    const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
+    // const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
+    const nodes = elements.nodes;
+    const edges = elements.edges;
 
     useEffect(() => {
-        if (!containerRef.current) return;
-
-        if (elements.nodes.length > 0) {
-            cyRef.current = cytoscape({
-                container: containerRef.current,
-                elements: [],
-                style: style,
-            });
-
-            // подчёркивает красным, внимания не обращать
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            cyRef.current.domNode();
-
-            const nodes = elements.nodes;
-            const edges = elements.edges;
-
-            nodes.forEach(node => {
-                if (node.classes === Classes.ENTITY) {
-                    //console.log(node.data.color)
-                    const entityComponent = (
-                        <CytoscapeEntityComponent
-                            entityName={String(node.data.id)}
-                            color={String(node.data.color)}
-                            columns={node.data.attributes}
-                            edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
-                        />
-                    );
-
-                    const div = document.createElement("div");
-                    div.id = String(node.data.id).toUpperCase();
-                    const root = createRoot(div);
-                    root.render(entityComponent);
-
-                    if (cyRef.current) {
-                        cyRef.current.add({
-                            'data': {
-                                'id': String(node.data.id).toUpperCase(),
-                                'dom': div,
-                            },
-                            'classes': String(node.classes),
-                            'position': {
-                                'x': 0,
-                                'y': 0,
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }, [elements, style, layout, containerRef, cyRef, isWithTemplate, template, isTemplateLoaded]);
+        initializeEntities();
+    }, [elements, style, layout, containerRef, cyRef, isWithTemplate, template, isTemplateLoaded, nodes, edges, initializeEntities]);
 
     useEffect(() => {
-        elements.edges.forEach(edge => {
-            if (cyRef.current) {
-                cyRef.current.add({
-                    data: {
-                        'source': edge.data.sourceTable,
-                        'target': edge.data.targetTable,
-                        'sourceTable': edge.data.sourceTable,
-                        'targetTable': edge.data.targetTable,
-                        'sourceField': edge.data.sourceField,
-                        'targetField': edge.data.targetField,
-                        'sourceInfo': edge.data.source,
-                        'targetInfo': edge.data.target,
-                        'label': edge.data.label,
-                        'type': edge.data.type
-                    }
-                });
-            }
-        });
-
-        if (!isWithTemplate || !isTemplateLoaded) {
-            cyRef.current?.layout(layout).run();
-        } else if (isTemplateLoaded && isWithTemplate) {
-            cyRef.current?.nodes().forEach(node => {
-                const localTemplate = template.find(temp => temp.name === node.data().id);
-                node.position().x = Number(localTemplate?.position.x);
-                node.position().y = Number(localTemplate?.position.y);
-            })
-        }
-
-        // Дополнительные настройки и обработчики событий
-        if (cyRef.current) {
-            // Обработчик события наведения на ребро
-            cyRef.current.on('mouseover', 'edge', (event) => {
-                const edge = event.target;
-                const position = event.renderedPosition;
-                const component = (
-                    <EdgeHintComponent
-                        sourceTable={edge.data().sourceTable}
-                        sourceField={edge.data().sourceField}
-                        targetTable={edge.data().targetTable}
-                        targetField={edge.data().targetField}
-                        type={edge.data().type}
-                    />
-                );
-                setTooltip({
-                    content: component,
-                    x: position.x,
-                    y: position.y
-                });
-            });
-
-            // Обработчик события ухода с ребра
-            cyRef.current.on('mouseout', 'edge', () => {
-                setTooltip(null);
-            });
-        }
-
-        if (cyRef.current) {
-            cyRef.current.on('tap', (event) => {
-                const edge = event.target;
-
-                cyRef.current?.nodes().forEach(node => {
-                    node?.style('border-color', '#000000');
-                    node?.style('border-width', 2);
-                });
-
-                if (edge !== cyRef.current) {
-                    const sourceTable = edge.data().sourceTable;
-                    const targetTable = edge.data().targetTable;
-                    const sourceNode = cyRef.current?.$(`#${sourceTable}`);
-                    const targetNode = cyRef.current?.$(`#${targetTable}`);
-
-                    sourceNode?.style('border-color', '#FF0000');
-                    targetNode?.style('border-color', '#FF0000');
-
-                    sourceNode?.style('border-width', 15);
-                    targetNode?.style('border-width', 15);
-                }
-            });
-        }
-    }, [cyRef, elements.edges, isTemplateLoaded, isWithTemplate, layout, template]);
+        initializeEdges();
+    }, [cyRef, edges, initializeEdges, isTemplateLoaded, isWithTemplate, layout, template]);
 
     useEffect(() => {
         // Очистка при размонтировании компонента
-        return () => {
-            if (cyRef.current) {
-                cyRef.current.destroy();
-            }
-        };
-    }, [cyRef]);
+        // console.log(cyRef.current?.elements().map(elem => elem.data()));
+
+        // edges.forEach(edge => {
+        //     const id = `${edge.data.sourceTable}_${edge.data.sourceField}_${edge.data.targetTable}_${edge.data.targetField}`;
+        //     cyRef.current?.getElementById(id).remove();
+        // });
+        destroyGraph();
+    }, [cyRef, destroyGraph, edges]);
 
     return (
         <>

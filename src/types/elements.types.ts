@@ -16,6 +16,7 @@ export interface TAttribute {
     isPK: boolean;
     divKeyId: string | null;
     key: string | null;
+    desc: string | null;
     [key: string]: any;
 }
 
@@ -28,5 +29,4 @@ export interface Entity extends NodeDefinition {
     grabbable?: boolean;
 }
 
-export interface Edge extends EdgeDefinition {
-}
+export interface Edge extends EdgeDefinition {}

@@ -6,6 +6,7 @@ export interface AttributeJSON {
 export interface EntityJSON {
     name: string;
     columns: AttributeJSON[];
+    color?: string;
     [key: string]: any;
 }
 

@@ -12,21 +12,20 @@ export interface EntityComponentProps {
     edges: EdgeDefinition[];
 }
 
+const EMPTY_FIELD: string = '-';
+
 export const CytoscapeEntityComponent = ({
     entityName,
     color,
     columns,
     edges
 }: EntityComponentProps) => {
-    if (color === 'undefined') {
-        color = 'white';
-    }
     return (
         <Layout
             direction="column"
             id={entityName}
             style={{
-                backgroundColor: `${color}`,
+                backgroundColor: color ? color : 'white',
                 border: '1px solid black',
                 alignItems: 'center',
             }}
@@ -89,10 +88,11 @@ export const CytoscapeEntityComponent = ({
                             style={{
                                 border: '1px solid black',
                                 borderTop: '2px solid black',
-                                width: '50%'
+                                width: '50%',
+                                alignItems: !column.desc ? 'center' : 'start'
                             }}
                         >
-                            {column.desc ? column.desc : ''}
+                            {column.desc ? column.desc : EMPTY_FIELD}
                         </div>
                     </Layout>
                 );

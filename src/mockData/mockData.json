@@ -6,7 +6,8 @@
         {
           "name": "id",
           "type": "integer",
-          "isPK": true
+          "isPK": true,
+          "desc": "PRIMARY KEY"
         }
       ]
     },
@@ -16,19 +17,23 @@
         {
           "name": "id",
           "type": "integer",
-          "isPK": true
+          "isPK": true,
+          "desc": "PRIMARY KEY"
         },
         {
           "name": "department_id",
           "type": "integer",
-          "isPK": false
+          "isPK": false,
+          "desc": "FOREIGN KEY"
         },
         {
           "name": "name",
           "type": "integer",
-          "isPK": false
+          "isPK": false,
+          "desc": null
         }
-      ]
+      ],
+      "color": "#00FF00"
     }
   ],
 

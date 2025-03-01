@@ -94,6 +94,7 @@ const formatter: {
                 data: {
                     id: entity.name.toUpperCase(),
                     label: entity.name.toUpperCase(),
+                    color: entity.color,
                     attributes: columnsOfEntity
                 },
                 classes: Classes.ENTITY,

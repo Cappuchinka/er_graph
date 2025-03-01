@@ -7,22 +7,26 @@ import KeyTooltip from '../KeyTooltip.tsx';
 
 export interface EntityComponentProps {
     entityName: string;
+    color: string | undefined;
     columns: TAttribute[];
     edges: EdgeDefinition[];
 }
 
 export const CytoscapeEntityComponent = ({
     entityName,
+    color,
     columns,
     edges
 }: EntityComponentProps) => {
-
+    if (color === 'undefined') {
+        color = 'white';
+    }
     return (
         <Layout
             direction="column"
             id={entityName}
             style={{
-                backgroundColor: 'white',
+                backgroundColor: `${color}`,
                 border: '1px solid black',
                 alignItems: 'center',
             }}
@@ -44,7 +48,7 @@ export const CytoscapeEntityComponent = ({
                         id={column.divKeyId ? column.divKeyId : ''}
                         direction="row"
                         style={{
-                            width: '30vw'
+                            width: '50vw'
                         }}
                     >
                         <div
@@ -79,6 +83,16 @@ export const CytoscapeEntityComponent = ({
                             }}
                         >
                             {column.type}
+                        </div>
+                        <div
+                            className={cnMixSpace({ p: 'xs' })}
+                            style={{
+                                border: '1px solid black',
+                                borderTop: '2px solid black',
+                                width: '50%'
+                            }}
+                        >
+                            {column.desc ? column.desc : ''}
                         </div>
                     </Layout>
                 );

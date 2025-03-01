@@ -72,7 +72,8 @@ const formatter: {
                     sourceField: `${ref.source.field}`.toUpperCase(),
                     targetField: `${ref.target.field}`.toUpperCase(),
                     label: formatter.referenceTypeFormatter(ref.type),
-                    type: ref.type
+                    type: ref.type,
+                    isShow: true
                 }
             });
         });
@@ -95,7 +96,8 @@ const formatter: {
                     id: entity.name.toUpperCase(),
                     label: entity.name.toUpperCase(),
                     color: entity.color,
-                    attributes: columnsOfEntity
+                    attributes: columnsOfEntity,
+                    isShow: true
                 },
                 classes: Classes.ENTITY,
                 grabbable: true
@@ -142,7 +144,7 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        console.log(elements);
+        // console.log(elements);
         return elements;
     },
     ElementToJSONFormatter: (elements: ElementsDefinition) => {

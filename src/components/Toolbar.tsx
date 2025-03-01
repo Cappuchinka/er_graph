@@ -23,7 +23,7 @@ export interface ToolbarProps {
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
-    entityItems: ReturnType<typeof useGetData>['entityItems'];
+    elements: ReturnType<typeof useGetData>['elements'];
     handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
 }
 
@@ -42,7 +42,7 @@ export const Toolbar = ({
     isTemplateLoaded,
     fileJSONName,
     fileTemplateName,
-    entityItems,
+    elements,
     handleCheckbox
 }: ToolbarProps) => {
     return (
@@ -134,7 +134,7 @@ export const Toolbar = ({
                         className={cnMixSpace({ mL: 's' })}
                     >
                         <EntitiesList
-                            entityItems={entityItems}
+                            elements={elements}
                             handleCheckbox={handleCheckbox}
                         />
                     </Layout>

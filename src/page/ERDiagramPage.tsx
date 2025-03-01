@@ -28,7 +28,6 @@ export const ERDiagramPage = () => {
         isTemplateLoaded,
         fileJSONName,
         fileTemplateName,
-        entityItems,
         handleCheckbox
     } = useGetData();
 
@@ -51,7 +50,7 @@ export const ERDiagramPage = () => {
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}
                 fileTemplateName={fileTemplateName}
-                entityItems={entityItems}
+                elements={elements}
                 handleCheckbox={handleCheckbox}
             />
             <CytoscapeComponent

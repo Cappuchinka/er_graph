@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import cytoscape, { Core, ElementsDefinition } from 'cytoscape';
+import cytoscape, {Core, ElementsDefinition, NodeDefinition} from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { HintTooltip, Template } from '../types/utils.types.ts';
 import { Classes, EntityItemsContextMenu } from '../types/elements.types.ts';
@@ -56,39 +56,43 @@ export const useGetData = () => {
 
             nodes.forEach(node => {
                 if (node.classes === Classes.ENTITY) {
-                    const entityComponent = (
-                        <CytoscapeEntityComponent
-                            entityName={String(node.data.id)}
-                            color={node.data.color}
-                            columns={node.data.attributes}
-                            edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
-                        />
-                    );
+                    if (node.data.isShow) {
+                        const entityComponent = (
+                            <CytoscapeEntityComponent
+                                entityName={String(node.data.id)}
+                                color={node.data.color}
+                                columns={node.data.attributes}
+                                edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
+                            />
+                        );
 
-                    const div = document.createElement("div");
-                    div.id = String(node.data.id).toUpperCase();
-                    const root = createRoot(div);
-                    root.render(entityComponent);
+                        const div = document.createElement("div");
+                        div.id = String(node.data.id).toUpperCase();
+                        const root = createRoot(div);
+                        root.render(entityComponent);
 
-                    if (cyRef.current) {
-                        cyRef.current.add({
-                            'data': {
-                                'id': String(node.data.id).toUpperCase(),
-                                'dom': div,
-                            },
-                            'classes': String(node.classes),
-                            'position': {
-                                'x': 0,
-                                'y': 0,
-                            }
+                        if (cyRef.current) {
+                            cyRef.current.add({
+                                'data': {
+                                    'id': String(node.data.id).toUpperCase(),
+                                    'label': String(node.data.label).toUpperCase(),
+                                    'isShow': node.data.isShow,
+                                    'dom': div,
+                                },
+                                'classes': String(node.classes),
+                                'position': {
+                                    'x': 0,
+                                    'y': 0,
+                                }
+                            });
+                        }
+
+                        localEntityContextItems.push({
+                            id: String(node.data.id).toUpperCase(),
+                            label: String(node.data.id),
+                            isShow: true
                         });
                     }
-
-                    localEntityContextItems.push({
-                        id: String(node.data.id).toUpperCase(),
-                        label: String(node.data.id),
-                        isShow: true
-                    });
                 }
             });
 
@@ -98,22 +102,25 @@ export const useGetData = () => {
 
     const initializeEdges = useCallback(() => {
         edges.forEach(edge => {
-            if (cyRef.current) {
-                cyRef.current.add({
-                    data: {
-                        'id': edge.data.id,
-                        'source': edge.data.sourceTable,
-                        'target': edge.data.targetTable,
-                        'sourceTable': edge.data.sourceTable,
-                        'targetTable': edge.data.targetTable,
-                        'sourceField': edge.data.sourceField,
-                        'targetField': edge.data.targetField,
-                        'sourceInfo': edge.data.source,
-                        'targetInfo': edge.data.target,
-                        'label': edge.data.label,
-                        'type': edge.data.type
-                    }
-                });
+            if (edge.data.isShow) {
+                if (cyRef.current) {
+                    cyRef.current.add({
+                        data: {
+                            'id': edge.data.id,
+                            'source': edge.data.sourceTable,
+                            'target': edge.data.targetTable,
+                            'sourceTable': edge.data.sourceTable,
+                            'targetTable': edge.data.targetTable,
+                            'sourceField': edge.data.sourceField,
+                            'targetField': edge.data.targetField,
+                            'sourceInfo': edge.data.source,
+                            'targetInfo': edge.data.target,
+                            'label': edge.data.label,
+                            'type': edge.data.type,
+                            'isShow': edge.data.isShow
+                        }
+                    });
+                }
             }
         });
 
@@ -286,16 +293,23 @@ export const useGetData = () => {
         onCancel();
     }, [handleJSONDownload, onCancel]);
 
-    const handleCheckbox = useCallback((item: EntityItemsContextMenu) => {
-        const newItems = entityItems.map((entityItem, index) => {
-            if (item.id === entityItem.id) {
-                return { ...entityItems[index], isShow: !entityItems[index].isShow };
+    const handleCheckbox = useCallback((item: NodeDefinition) => {
+        const localEdges = elements.edges.map((edge) => {
+            if (edge.data.sourceTable === item.data.id || edge.data.targetTable === item.data.id) {
+                return { ...edge, data: { ...edge.data, isShow: !edge.data.isShow} }
+            } else {
+                return edge;
             }
-            return entityItem;
         });
-
-        setEntityItems(newItems);
-    }, [entityItems]);
+        const localNodes = elements.nodes.map((node) => {
+           if (node.data.id === item.data.id) {
+               return { ...node, data: { ...node.data, isShow: !node.data.isShow} };
+           } else {
+               return node;
+           }
+        });
+        setElements({ nodes: localNodes, edges: localEdges});
+    }, [elements.edges, elements.nodes]);
 
     return {
         elements,

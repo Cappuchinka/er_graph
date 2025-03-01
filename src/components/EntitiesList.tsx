@@ -1,19 +1,20 @@
 import { useRef, useState } from 'react';
 import { Button } from '@consta/uikit/Button';
 import { ContextMenu } from '@consta/uikit/ContextMenu';
-import { EntityItemsContextMenu } from '../types/elements.types.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { IconDown } from '@consta/icons/IconDown';
 import { Checkbox } from '@consta/uikit/Checkbox';
 import { useGetData } from '../hooks/useGetData.tsx';
+import {NodeDefinition} from "cytoscape";
+import {Classes} from "../types/elements.types.ts";
 
 export interface EntitiesListProps {
-    entityItems: ReturnType<typeof useGetData>['entityItems'];
+    elements: ReturnType<typeof useGetData>['elements'];
     handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
 }
 
 export const EntitiesList = ({
-    entityItems,
+    elements,
     handleCheckbox
 }: EntitiesListProps) => {
     const ref = useRef<HTMLButtonElement>(null);
@@ -30,14 +31,14 @@ export const EntitiesList = ({
     };
 
     const renderLeftSide = (
-        item: EntityItemsContextMenu,
-        onChange: (item: EntityItemsContextMenu) => void
+        item: NodeDefinition,
+        onChange: (item: NodeDefinition) => void
     ) => {
         const nodeArray = [];
 
         nodeArray.push(
             <Checkbox
-                checked={item.isShow}
+                checked={item.data.isShow}
                 onChange={() => onChange(item)}
             />
         );
@@ -48,7 +49,7 @@ export const EntitiesList = ({
     return (
         <>
             <Button
-                disabled={entityItems.length === 0}
+                disabled={elements.nodes.length === 0}
                 ref={ref}
                 view="secondary"
                 label="Список сущностей"
@@ -61,13 +62,13 @@ export const EntitiesList = ({
                 isOpen={isOpen}
                 anchorRef={ref}
                 direction="downStartLeft"
-                items={entityItems}
+                items={elements.nodes.filter(elem => elem.classes === Classes.ENTITY)}
                 onClickOutside={() => {
                     setIsOpen(false);
                 }}
                 getItemLeftSide={item => renderLeftSide(item, handleCheckbox)}
-                getItemKey={item => item.id}
-                getItemLabel={item => item.label}
+                getItemKey={item => item.data.id}
+                getItemLabel={item => item.data.label}
             />
         </>
     );

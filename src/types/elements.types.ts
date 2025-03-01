@@ -16,6 +16,7 @@ export interface TAttribute {
     isPK: boolean;
     divKeyId: string | null;
     key: string | null;
+    desc: string | null;
     [key: string]: any;
 }
 

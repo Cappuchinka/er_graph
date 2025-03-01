@@ -142,7 +142,7 @@ const formatter: {
         edges.map(edge => {
             elements.edges.push(edge);
         });
-        // console.log(elements);
+        console.log(elements);
         return elements;
     },
     ElementToJSONFormatter: (elements: ElementsDefinition) => {

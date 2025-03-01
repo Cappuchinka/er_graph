@@ -59,6 +59,7 @@ export const useGetData = () => {
                     const entityComponent = (
                         <CytoscapeEntityComponent
                             entityName={String(node.data.id)}
+                            color={node.data.color}
                             columns={node.data.attributes}
                             edges={edges.filter(edge => edge.data.sourceTable === node.data.id || edge.data.targetTable === node.data.id)}
                         />

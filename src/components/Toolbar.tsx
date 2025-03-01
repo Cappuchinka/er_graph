@@ -6,7 +6,7 @@ import { useGetData } from '../hooks/useGetData.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import DownloadJSONModal from './DownloadJSONModal.tsx';
 import { Switch } from '@consta/uikit/Switch';
-import EntitiesList from "./EntitiesList.tsx";
+import EntitiesList from './EntitiesList.tsx';
 
 export interface ToolbarProps {
     handleJSONFileUpload: ReturnType<typeof useGetData>['handleJSONFileUpload'];

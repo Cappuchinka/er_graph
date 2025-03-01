@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import cytoscape, {Core, ElementsDefinition, NodeDefinition} from 'cytoscape';
+import cytoscape, {Core, EdgeDefinition, ElementsDefinition, NodeDefinition} from 'cytoscape';
 import { useFormatter } from '../utils/useFormatter.ts';
 import { HintTooltip, Template } from '../types/utils.types.ts';
 import { Classes } from '../types/elements.types.ts';
@@ -292,6 +292,18 @@ export const useGetData = () => {
         onCancel();
     }, [handleJSONDownload, onCancel]);
 
+    const checkExistNodeForFiltration = useCallback((localNodes:NodeDefinition[], item: NodeDefinition, edge: EdgeDefinition) => {
+        return (
+                    edge.data.sourceTable === item.data.id
+                    && localNodes.find((localNode) => { if (localNode.data.id === edge.data.targetTable) return localNode; })?.data.isShow
+                )
+                ||
+                (
+                    edge.data.targetTable === item.data.id
+                    && localNodes.find((localNode) => { if (localNode.data.id === edge.data.sourceTable) return localNode; })?.data.isShow
+                );
+    }, []);
+
     const handleCheckbox = useCallback((item: NodeDefinition) => {
         const localNodes = elements.nodes.map((node) => {
             if (node.data.id === item.data.id) {
@@ -301,14 +313,14 @@ export const useGetData = () => {
             }
         });
         const localEdges = elements.edges.map((edge) => {
-            if (edge.data.sourceTable === item.data.id || edge.data.targetTable === item.data.id) {
+            if (checkExistNodeForFiltration(localNodes, item, edge)) {
                 return { ...edge, data: { ...edge.data, isShow: !edge.data.isShow} }
             } else {
                 return edge;
             }
         });
         setElements({ nodes: localNodes, edges: localEdges });
-    }, [elements.edges, elements.nodes]);
+    }, [checkExistNodeForFiltration, elements.edges, elements.nodes]);
 
     return {
         elements,

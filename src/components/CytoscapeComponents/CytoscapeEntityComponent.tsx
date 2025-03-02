@@ -83,17 +83,17 @@ export const CytoscapeEntityComponent = ({
                         >
                             {column.type}
                         </div>
-                        <div
+                        <Text
                             className={cnMixSpace({ p: 'xs' })}
                             style={{
                                 border: '1px solid black',
                                 borderTop: '2px solid black',
                                 width: '50%',
-                                alignItems: !column.desc ? 'center' : 'start'
                             }}
+                            align={!column.desc ? 'center' : 'left'}
                         >
                             {column.desc ? column.desc : EMPTY_FIELD}
-                        </div>
+                        </Text>
                     </Layout>
                 );
             })}

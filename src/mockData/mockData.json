@@ -29,8 +29,7 @@
         {
           "name": "name",
           "type": "integer",
-          "isPK": false,
-          "desc": null
+          "isPK": false
         }
       ],
       "color": "#00FF00"

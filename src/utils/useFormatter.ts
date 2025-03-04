@@ -1,7 +1,7 @@
-import {Attribute, Classes, Edge, Entity, TAttribute} from '../types/elements.types.ts';
-import {EntityJSON, InputJSON, ReferenceJSON} from '../types/json.types.ts';
-import {ElementsDefinition, NodeDefinition} from 'cytoscape';
-import {Template} from '../types/utils.types.ts';
+import { Attribute, Classes, Edge, Entity, TAttribute } from '../types/elements.types.ts';
+import { EntityJSON, InputJSON, ReferenceJSON } from '../types/json.types.ts';
+import { ElementsDefinition, NodeDefinition } from 'cytoscape';
+import { Template } from '../types/utils.types.ts';
 
 const formatter: {
     referenceTypeFormatter: (
@@ -84,7 +84,12 @@ const formatter: {
 
         json.entities.map(entity => {
             const columnsOfEntity = entity.columns.map(column => {
-                const key = column.isPK ? 'PK' : json.references.find(ref => ref.target.field === column.name && ref.target.table === entity.name) ? 'FK' : null;
+                const key = column.isPK ? 'PK' : json.references
+                    .find(ref => {
+                        if (ref.target.field.toUpperCase() === column.name.toUpperCase() && ref.target.table.toUpperCase() === entity.name.toUpperCase()) {
+                            return ref;
+                        }
+                    }) ? 'FK' : null;
                 return {
                     ...column,
                     key: key,
@@ -178,7 +183,8 @@ const formatter: {
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         const { key, divKeyId, ...rest } = attr;
                         return rest;
-                    })
+                    }),
+                    color: node.data.color,
                 });
             }
         });

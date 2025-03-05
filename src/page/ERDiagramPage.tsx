@@ -35,6 +35,11 @@ export const ERDiagramPage = () => {
     return (
         <Layout
             direction="column"
+            style={{
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden',
+            }}
         >
             <Toolbar
                 handleJSONFileUpload={handleJSONFileUpload}

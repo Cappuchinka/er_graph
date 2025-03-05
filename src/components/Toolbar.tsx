@@ -52,13 +52,16 @@ export const Toolbar = ({
             <Layout
                 direction="column"
                 className={cnMixSpace({ mH: 'xs', mT: '2xs' })}
+                style={{
+                    maxWidth: '100%'
+                }}
             >
 
                 {/** Title */}
                 <Layout
                     style={{
-                        width: '100vw',
-                        maxWidth: '100vw',
+                        width: '100%',
+                        maxWidth: '100%',
                     }}
                 >
                     <Text
@@ -78,6 +81,7 @@ export const Toolbar = ({
                     className={cnMixSpace({ mT: '2xs' })}
                     style={{
                         alignItems: 'center',
+                        width: 'max-content'
                     }}
                 >
                     <Layout
@@ -143,9 +147,13 @@ export const Toolbar = ({
                     </Layout>
                 </Layout>
 
+                {/** Название файлов */}
                 <Layout
                     direction="column"
                     className={cnMixSpace({ mT: '2xs' })}
+                    style={{
+                        width: 'max-content'
+                    }}
                 >
                     <Text
                         weight="semibold"

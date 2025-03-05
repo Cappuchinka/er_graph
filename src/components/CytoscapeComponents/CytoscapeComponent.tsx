@@ -80,8 +80,9 @@ const CytoscapeComponent = ({
             <div
                 ref={containerRef}
                 style={{
+                    display: 'block',
                     width: '100vw',
-                    height: '100vh'
+                    height: '87vh'
                 }}
                 className={cnMixSpace({ m: 0, p: 0 })}
             />

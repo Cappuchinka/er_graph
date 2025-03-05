@@ -4,7 +4,14 @@ import ERDiagramPage from './page/ERDiagramPage.tsx';
 
 const App: React.FC = () => {
     return (
-        <Theme preset={presetGpnDefault}>
+        <Theme
+            preset={presetGpnDefault}
+            style={{
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden'
+            }}
+        >
             <ERDiagramPage/>
         </Theme>
     );

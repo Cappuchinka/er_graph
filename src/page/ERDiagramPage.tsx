@@ -3,6 +3,7 @@ import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
 import CytoscapeComponent from '../components/CytoscapeComponents/CytoscapeComponent.tsx';
 import Toolbar from '../components/Toolbar.tsx';
 import { useGetData } from '../hooks/useGetData.tsx';
+import {useState} from "react";
 
 export const ERDiagramPage = () => {
     const {
@@ -29,8 +30,12 @@ export const ERDiagramPage = () => {
         fileJSONName,
         fileTemplateName,
         handleCheckbox,
-        count
+        entitiesStroke,
+        setEntitiesStroke,
+        handleFiltration
     } = useGetData();
+
+    const [showFilter, setShowFilter] = useState<boolean>(false);
 
     return (
         <Layout
@@ -58,7 +63,11 @@ export const ERDiagramPage = () => {
                 fileTemplateName={fileTemplateName}
                 elements={elements}
                 handleCheckbox={handleCheckbox}
-                count={count}
+                entitiesStroke={entitiesStroke}
+                setEntitiesStroke={setEntitiesStroke}
+                handleFiltration={handleFiltration}
+                showFilter={showFilter}
+                setShowFilter={setShowFilter}
             />
             <CytoscapeComponent
                 cyRef={cyRef}
@@ -73,6 +82,7 @@ export const ERDiagramPage = () => {
                 initializeEntities={initializeEntities}
                 initializeEdges={initializeEdges}
                 destroyGraph={destroyGraph}
+                showFilter={showFilter}
             />
         </Layout>
     );

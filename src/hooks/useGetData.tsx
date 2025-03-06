@@ -339,48 +339,34 @@ export const useGetData = () => {
             setElements({ nodes: localNodes, edges: localEdges });
         } else {
             const entities = entitiesStroke.split(/[\s,;]+/).filter(Boolean);
-            if (elements.nodes.filter(node => node.classes === Classes.ENTITY).length === entities.length) {
-                const localNodes = elements.nodes.map((node) => {
+            const localNodes = elements.nodes.map((node) => {
+                if (entities.find(entity => entity.toUpperCase() === node.data.id?.toUpperCase())) {
                     return { ...node, data: { ...node.data, isShow: true } };
-                });
-                const localEdges = elements.edges.map((edge) => {
-                    return { ...edge, data: { ...edge.data, isShow: true } }
-                });
-                setElements({ nodes: localNodes, edges: localEdges });
-            } else {
-                const localNodes = elements.nodes.map((node) => {
-                    if (entities.find(entity => entity.toUpperCase() === node.data.id?.toUpperCase())) {
-                        return { ...node, data: { ...node.data, isShow: true } };
-                    } else {
-                        return { ...node, data: { ...node.data, isShow: false } };
-                    }
-                });
-                let localEdges: EdgeDefinition[] = [];
+                } else {
+                    return { ...node, data: { ...node.data, isShow: false } };
+                }
+            });
+            let localEdges: EdgeDefinition[] = [];
 
-                elements.edges.map((edge) => {
-                    entities.forEach(entity => {
-                        const item = localNodes.find(localNode => localNode.data.id === entity.toUpperCase());
-                        if (item && item.data.isShow) {
-                            if (checkExistNodeForFiltration(localNodes, item, edge)) {
-                                localEdges.push({ ...edge, data: { ...edge.data, isShow: true } });
-                            } else {
-                                localEdges.push({ ...edge, data: { ...edge.data, isShow: false } });
-                            }
+            elements.edges.map((edge) => {
+                entities.forEach(entity => {
+                    const item = localNodes.find(localNode => localNode.data.id === entity.toUpperCase());
+                    if (item && item.data.isShow) {
+                        if (checkExistNodeForFiltration(localNodes, item, edge)) {
+                            localEdges.push({ ...edge, data: { ...edge.data, isShow: true } });
                         } else {
                             localEdges.push({ ...edge, data: { ...edge.data, isShow: false } });
                         }
-                    });
+                    } else {
+                        localEdges.push({ ...edge, data: { ...edge.data, isShow: false } });
+                    }
                 });
+            });
 
-                localEdges = removeDuplicatesById(localEdges);
-
-                console.log(localEdges.map(le => le.data.id));
-                console.log(localEdges.map(le => le.data.isShow));
-                console.log(localEdges);
-                setElements({ nodes: localNodes, edges: localEdges });
-            }
+            localEdges = removeDuplicatesById(localEdges);
+            setElements({ nodes: localNodes, edges: localEdges });
         }
-    }, [checkExistNodeForFiltration, elements.edges, elements.nodes, entitiesStroke]);
+    }, [checkExistNodeForFiltration, elements.edges, elements.nodes, entitiesStroke, removeDuplicatesById]);
 
     return {
         elements,

@@ -26,21 +26,10 @@ export const useGetData = () => {
 
     const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
 
-    const [count, setCount] = useState<number>(0);
-
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
             setUpdateFlag(false);
         }
-
-        let count: number = 0;
-
-        elements.nodes
-            .filter(node => node.classes === Classes.ENTITY)
-            .forEach(node => {
-                if (node.data.isShow) count++;
-            });
-        setCount(count);
     }, [elements]);
 
     const nodes = elements.nodes;
@@ -322,6 +311,63 @@ export const useGetData = () => {
         setElements({ nodes: localNodes, edges: localEdges });
     }, [checkExistNodeForFiltration, elements.edges, elements.nodes]);
 
+    const [entitiesStroke, setEntitiesStroke] = useState<string | null>(null);
+
+    const removeDuplicatesById = useCallback((array: EdgeDefinition[]): EdgeDefinition[] => {
+        const uniqueMap = new Map<string, EdgeDefinition>();
+
+        array.forEach(item => {
+            const id = item.data.id;
+            if (id) {
+                if (!uniqueMap.has(id)) {
+                    uniqueMap.set(id, item);
+                }
+            }
+        });
+
+        return Array.from(uniqueMap.values());
+    }, []);
+
+    const handleFiltration = useCallback(() => {
+        if (!entitiesStroke) {
+            const localNodes = elements.nodes.map((node) => {
+                return { ...node, data: { ...node.data, isShow: true } };
+            });
+            const localEdges = elements.edges.map((edge) => {
+                return { ...edge, data: { ...edge.data, isShow: true } }
+            });
+            setElements({ nodes: localNodes, edges: localEdges });
+        } else {
+            const entities = entitiesStroke.split(/[\s,;]+/).filter(Boolean);
+            const localNodes = elements.nodes.map((node) => {
+                if (entities.find(entity => entity.toUpperCase() === node.data.id?.toUpperCase())) {
+                    return { ...node, data: { ...node.data, isShow: true } };
+                } else {
+                    return { ...node, data: { ...node.data, isShow: false } };
+                }
+            });
+            let localEdges: EdgeDefinition[] = [];
+
+            elements.edges.map((edge) => {
+                entities.forEach(entity => {
+                    const item = localNodes.find(localNode => localNode.data.id === entity.toUpperCase());
+                    if (item && item.data.isShow) {
+                        if (checkExistNodeForFiltration(localNodes, item, edge)) {
+                            localEdges.push({ ...edge, data: { ...edge.data, isShow: true } });
+                        } else {
+                            localEdges.push({ ...edge, data: { ...edge.data, isShow: false } });
+                        }
+                    } else {
+                        localEdges.push({ ...edge, data: { ...edge.data, isShow: false } });
+                    }
+                });
+            });
+
+            localEdges = removeDuplicatesById(localEdges);
+            setElements({ nodes: localNodes, edges: localEdges });
+        }
+    }, [checkExistNodeForFiltration, elements.edges, elements.nodes, entitiesStroke, removeDuplicatesById]);
+
     return {
         elements,
         cyRef,
@@ -347,6 +393,8 @@ export const useGetData = () => {
         fileJSONName,
         fileTemplateName,
         handleCheckbox,
-        count
+        entitiesStroke,
+        setEntitiesStroke,
+        handleFiltration
     }
 };

@@ -7,6 +7,9 @@ import { cnMixSpace } from '@consta/uikit/MixSpace';
 import DownloadJSONModal from './DownloadJSONModal.tsx';
 import { Switch } from '@consta/uikit/Switch';
 import EntitiesList from './EntitiesList.tsx';
+import { TextField } from '@consta/uikit/TextField';
+import React from 'react';
+import { IconDown } from '@consta/icons/IconDown';
 
 export interface ToolbarProps {
     handleJSONFileUpload: ReturnType<typeof useGetData>['handleJSONFileUpload'];
@@ -25,7 +28,11 @@ export interface ToolbarProps {
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
     elements: ReturnType<typeof useGetData>['elements'];
     handleCheckbox: ReturnType<typeof useGetData>['handleCheckbox'];
-    count: ReturnType<typeof useGetData>['count'];
+    entitiesStroke: ReturnType<typeof useGetData>['entitiesStroke'];
+    setEntitiesStroke: ReturnType<typeof useGetData>['setEntitiesStroke'];
+    handleFiltration: ReturnType<typeof useGetData>['handleFiltration'];
+    showFilter: boolean;
+    setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Toolbar = ({
@@ -45,20 +52,37 @@ export const Toolbar = ({
     fileTemplateName,
     elements,
     handleCheckbox,
-    count
+    entitiesStroke,
+    setEntitiesStroke,
+    handleFiltration,
+    showFilter,
+    setShowFilter,
 }: ToolbarProps) => {
+
+    const IconDownButton = () => {
+        return (
+            <IconDown
+                size="s"
+                style={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            />
+        );
+    };
+
     return (
         <>
             <Layout
                 direction="column"
                 className={cnMixSpace({ mH: 'xs', mT: '2xs' })}
+                style={{
+                    maxWidth: '100%'
+                }}
             >
 
                 {/** Title */}
                 <Layout
                     style={{
-                        width: '100vw',
-                        maxWidth: '100vw',
+                        width: '100%',
+                        maxWidth: '100%',
                     }}
                 >
                     <Text
@@ -78,6 +102,7 @@ export const Toolbar = ({
                     className={cnMixSpace({ mT: '2xs' })}
                     style={{
                         alignItems: 'center',
+                        width: 'max-content'
                     }}
                 >
                     <Layout
@@ -88,7 +113,14 @@ export const Toolbar = ({
                             accept="application/json"
                             onChange={handleJSONFileUpload}
                         >
-                            {(props) => <Button {...props} label="Загрузить JSON" />}
+                            {(props) => {
+                                return (
+                                    <Button
+                                        {...props}
+                                        label="Загрузить JSON"
+                                    />
+                                );
+                            }}
                         </FileField>
 
                         <FileField
@@ -98,7 +130,16 @@ export const Toolbar = ({
                             onChange={handleTemplateFileUpload}
                             className={cnMixSpace({ mL: 's' })}
                         >
-                            {(props) => <Button {...props} view={isWithTemplate ? 'primary' : 'ghost'} style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }} label="Загрузить Шаблон" />}
+                            {(props) => {
+                                return (
+                                    <Button
+                                        {...props}
+                                        view={isWithTemplate ? 'primary' : 'ghost'}
+                                        style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }}
+                                        label="Загрузить Шаблон"
+                                    />
+                                );
+                            }}
                         </FileField>
 
                         <Layout
@@ -131,6 +172,7 @@ export const Toolbar = ({
                         />
                     </Layout>
 
+                    {/** Filtration */}
                     <Layout
                         direction="row"
                         className={cnMixSpace({ mL: 's' })}
@@ -138,14 +180,60 @@ export const Toolbar = ({
                         <EntitiesList
                             elements={elements}
                             handleCheckbox={handleCheckbox}
-                            count={count}
+                        />
+                    </Layout>
+
+                    {/** Show Filter */}
+                    <Layout
+                        direction="row"
+                        className={cnMixSpace({ mL: 's' })}
+                    >
+                        <Button
+                            iconLeft={IconDownButton}
+                            view="secondary"
+                            onClick={() => {
+                                setShowFilter(!showFilter);
+                            }}
                         />
                     </Layout>
                 </Layout>
 
+                {/** New Filtration */}
+                {showFilter && (
+                    <Layout
+                        direction="row"
+                        className={cnMixSpace({ mT: 's' })}
+                        style={{
+                            width: '45%'
+                        }}
+                    >
+                        <TextField
+                            form="defaultClear"
+                            placeholder="Введите сущности"
+                            type="textarea"
+                            value={entitiesStroke}
+                            onChange={(value) => {
+                                setEntitiesStroke(value);
+                            }}
+                            // rows={4}
+                        />
+                        <Button
+                            form="brickDefault"
+                            label="Поиск"
+                            onClick={() => {
+                                handleFiltration();
+                            }}
+                        />
+                    </Layout>
+                )}
+
+                {/** Название файлов */}
                 <Layout
                     direction="column"
                     className={cnMixSpace({ mT: '2xs' })}
+                    style={{
+                        width: 'max-content'
+                    }}
                 >
                     <Text
                         weight="semibold"

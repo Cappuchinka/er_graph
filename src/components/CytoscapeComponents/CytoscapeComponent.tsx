@@ -36,6 +36,7 @@ export interface CytoscapeComponentProps {
     destroyGraph: ReturnType<typeof useGetData>['destroyGraph'];
     style: Stylesheet[];
     layout: LayoutOptions;
+    showFilter: boolean;
 }
 
 const CytoscapeComponent = ({
@@ -51,8 +52,8 @@ const CytoscapeComponent = ({
     initializeEntities,
     initializeEdges,
     destroyGraph,
+    showFilter
 }: CytoscapeComponentProps) => {
-    // const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
     const nodes = elements.nodes;
     const edges = elements.edges;
 
@@ -80,8 +81,9 @@ const CytoscapeComponent = ({
             <div
                 ref={containerRef}
                 style={{
-                    width: '100vw',
-                    height: '100vh'
+                    display: 'block',
+                    width: showFilter ? '100vw' : '100vw',
+                    height: showFilter ? '81vh' : '87vh'
                 }}
                 className={cnMixSpace({ m: 0, p: 0 })}
             />

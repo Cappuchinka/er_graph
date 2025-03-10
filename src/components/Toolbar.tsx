@@ -18,8 +18,8 @@ export interface ToolbarProps {
     downloadFileName: ReturnType<typeof useGetData>['downloadFileName'];
     setDownloadFileName: ReturnType<typeof useGetData>['setDownloadFileName'];
     isOpenDownloadJSONModal: ReturnType<typeof useGetData>['isOpenDownloadJSONModal'];
-    onOpen: ReturnType<typeof useGetData>['onOpen'];
-    onCancel: ReturnType<typeof useGetData>['onCancel'];
+    onOpenDownloadJSON: ReturnType<typeof useGetData>['onOpenDownloadJSON'];
+    onCancelDownloadJSON: ReturnType<typeof useGetData>['onCancelDownloadJSON'];
     onAccept: ReturnType<typeof useGetData>['onAccept'];
     isWithTemplate: ReturnType<typeof useGetData>['isWithTemplate'];
     handleSwitch: ReturnType<typeof useGetData>['handleSwitch'];
@@ -42,8 +42,8 @@ export const Toolbar = ({
     downloadFileName,
     setDownloadFileName,
     isOpenDownloadJSONModal,
-    onOpen,
-    onCancel,
+    onOpenDownloadJSON,
+    onCancelDownloadJSON,
     onAccept,
     isWithTemplate,
     handleSwitch,
@@ -168,7 +168,7 @@ export const Toolbar = ({
                             view="secondary"
                             className={cnMixSpace({ mL: 's' })}
                             label="Скачать JSON"
-                            onClick={onOpen}
+                            onClick={onOpenDownloadJSON}
                         />
                     </Layout>
 
@@ -258,7 +258,7 @@ export const Toolbar = ({
                 isOpen={isOpenDownloadJSONModal}
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
-                onCancel={onCancel}
+                onCancel={onCancelDownloadJSON}
                 onAccept={onAccept}
             />
         </>

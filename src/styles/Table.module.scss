@@ -1,0 +1,20 @@
+.scrolling {
+    &,
+    & :global(.rcta--RcTable-container) {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    :global {
+        .rcta--RcTable-header {
+            flex: 1 0 auto;
+        }
+
+        .rcta--RcTable-body {
+            max-height: 40vh !important;
+            overflow-y: auto !important;
+        }
+    }
+}

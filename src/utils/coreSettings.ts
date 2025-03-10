@@ -28,8 +28,11 @@ export const STYLE: Stylesheet[] = [
         selector: 'edge',
         style: {
             'label': 'data(label)',
+            'font-weight': 'bold',
+            'font-size': '30px',
             'curve-style': 'taxi',
-            'target-arrow-shape': 'triangle'
+            'target-arrow-shape': 'triangle',
+            'arrow-scale': 3
         }
     }
 ];

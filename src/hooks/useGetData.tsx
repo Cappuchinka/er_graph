@@ -26,6 +26,19 @@ export const useGetData = () => {
 
     const [tooltip, setTooltip] = useState<HintTooltip | null>(null);
 
+    const [isOpenInfoEntityModal, setIsOpenInfoEntityModal] = useState<boolean>(false);
+    const [nodeEntityInfo, setNodeEntityInfo] = useState<NodeDefinition | null>(null);
+
+    const onOpenInfoEntityModal = useCallback((node: NodeDefinition) => {
+        setNodeEntityInfo(node);
+        setIsOpenInfoEntityModal(true);
+    }, []);
+
+    const onCancelInfoEntityModal = useCallback(() => {
+        setNodeEntityInfo(null);
+        setIsOpenInfoEntityModal(false);
+    }, []);
+
     useEffect(() => {
         if (elements.nodes.length === 0 || elements.edges.length === 0) {
             setUpdateFlag(false);
@@ -72,7 +85,9 @@ export const useGetData = () => {
                                 'data': {
                                     'id': String(node.data.id).toUpperCase(),
                                     'label': String(node.data.label).toUpperCase(),
+                                    'attributes': node.data.attributes,
                                     'isShow': node.data.isShow,
+                                    'color': node.data.color ? node.data.color : '#FFFFFF',
                                     'dom': div,
                                 },
                                 'classes': String(node.classes),
@@ -88,41 +103,7 @@ export const useGetData = () => {
         }
     }, [edges, nodes]);
 
-    const initializeEdges = useCallback(() => {
-        edges.forEach(edge => {
-            if (edge.data.isShow) {
-                if (cyRef.current) {
-                    cyRef.current.add({
-                        data: {
-                            'id': edge.data.id,
-                            'source': edge.data.sourceTable,
-                            'target': edge.data.targetTable,
-                            'sourceTable': edge.data.sourceTable,
-                            'targetTable': edge.data.targetTable,
-                            'sourceField': edge.data.sourceField,
-                            'targetField': edge.data.targetField,
-                            'sourceInfo': edge.data.source,
-                            'targetInfo': edge.data.target,
-                            'label': edge.data.label,
-                            'type': edge.data.type,
-                            'isShow': edge.data.isShow
-                        }
-                    });
-                }
-            }
-        });
-
-        if (!isWithTemplate || !isTemplateLoaded) {
-            cyRef.current?.layout(LAYOUT).run();
-        } else if (isTemplateLoaded && isWithTemplate) {
-            cyRef.current?.nodes().forEach(node => {
-                const localTemplate = template.find(temp => temp.name === node.data().id);
-                node.position().x = Number(localTemplate?.position.x);
-                node.position().y = Number(localTemplate?.position.y);
-            })
-        }
-
-        // Дополнительные настройки и обработчики событий
+    const handleHoverMouseToEdge = useCallback(() => {
         if (cyRef.current) {
             // Обработчик события наведения на ребро
             cyRef.current.on('mouseover', 'edge', (event) => {
@@ -173,7 +154,60 @@ export const useGetData = () => {
                 }
             });
         }
-    }, [edges, isTemplateLoaded, isWithTemplate, template]);
+    }, []);
+
+    const handleClickEntity = useCallback(() => {
+        if (cyRef.current) {
+            cyRef.current.on('tap', 'node', (event) => {
+                const node = event.target;
+                const isCtrlPush = event.originalEvent.ctrlKey;
+
+                if (isCtrlPush) {
+                    onOpenInfoEntityModal(node);
+                }
+            });
+        }
+    }, [onOpenInfoEntityModal]);
+
+    const initializeEdges = useCallback(() => {
+        edges.forEach(edge => {
+            if (edge.data.isShow) {
+                if (cyRef.current) {
+                    cyRef.current.add({
+                        data: {
+                            'id': edge.data.id,
+                            'source': edge.data.sourceTable,
+                            'target': edge.data.targetTable,
+                            'sourceTable': edge.data.sourceTable,
+                            'targetTable': edge.data.targetTable,
+                            'sourceField': edge.data.sourceField,
+                            'targetField': edge.data.targetField,
+                            'sourceInfo': edge.data.source,
+                            'targetInfo': edge.data.target,
+                            'label': edge.data.label,
+                            'type': edge.data.type,
+                            'isShow': edge.data.isShow
+                        }
+                    });
+                }
+            }
+        });
+
+        if (!isWithTemplate || !isTemplateLoaded) {
+            cyRef.current?.layout(LAYOUT).run();
+        } else if (isTemplateLoaded && isWithTemplate) {
+            cyRef.current?.nodes().forEach(node => {
+                const localTemplate = template.find(temp => temp.name === node.data().id);
+                node.position().x = Number(localTemplate?.position.x);
+                node.position().y = Number(localTemplate?.position.y);
+            })
+        }
+
+        // Дополнительные настройки и обработчики событий
+        handleHoverMouseToEdge();
+
+        handleClickEntity();
+    }, [edges, handleClickEntity, handleHoverMouseToEdge, isTemplateLoaded, isWithTemplate, template]);
 
     const destroyGraph = useCallback(() => {
         return () => {
@@ -266,20 +300,20 @@ export const useGetData = () => {
         setIsWithTemplate(!isWithTemplate)
     }, [isWithTemplate]);
 
-    const onOpen = useCallback(() => {
+    const onOpenDownloadJSON = useCallback(() => {
         setDownloadFileName(null);
         setIsOpenDownloadJSONModal(true);
     }, []);
 
-    const onCancel = useCallback(() => {
+    const onCancelDownloadJSON = useCallback(() => {
         setDownloadFileName(null);
         setIsOpenDownloadJSONModal(false);
     }, []);
 
     const onAccept = useCallback(() => {
         handleJSONDownload();
-        onCancel();
-    }, [handleJSONDownload, onCancel]);
+        onCancelDownloadJSON();
+    }, [handleJSONDownload, onCancelDownloadJSON]);
 
     const checkExistNodeForFiltration = useCallback((localNodes:NodeDefinition[], item: NodeDefinition, edge: EdgeDefinition) => {
         return (
@@ -383,8 +417,8 @@ export const useGetData = () => {
         isOpenDownloadJSONModal,
         downloadFileName,
         setDownloadFileName,
-        onOpen,
-        onCancel,
+        onOpenDownloadJSON,
+        onCancelDownloadJSON,
         onAccept,
         isWithTemplate,
         handleSwitch,
@@ -395,6 +429,10 @@ export const useGetData = () => {
         handleCheckbox,
         entitiesStroke,
         setEntitiesStroke,
-        handleFiltration
+        handleFiltration,
+        isOpenInfoEntityModal,
+        onOpenInfoEntityModal,
+        onCancelInfoEntityModal,
+        nodeEntityInfo
     }
 };

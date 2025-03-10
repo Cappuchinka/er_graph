@@ -15,6 +15,7 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import cytoscapeDomNode from 'cytoscape-dom-node';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { useGetData } from '../../hooks/useGetData.ts';
+import InfoEntityModal from "../InfoEntityModal.tsx";
 
 // Регистрация расширения для макета
 cytoscape.use(dagre);
@@ -34,6 +35,9 @@ export interface CytoscapeComponentProps {
     initializeEntities: ReturnType<typeof useGetData>['initializeEntities'];
     initializeEdges: ReturnType<typeof useGetData>['initializeEdges'];
     destroyGraph: ReturnType<typeof useGetData>['destroyGraph'];
+    isOpenInfoEntityModal: ReturnType<typeof useGetData>['isOpenInfoEntityModal'];
+    onCancelInfoEntityModal: ReturnType<typeof useGetData>['onCancelInfoEntityModal'];
+    nodeEntityInfo: ReturnType<typeof useGetData>['nodeEntityInfo'];
     style: Stylesheet[];
     layout: LayoutOptions;
     showFilter: boolean;
@@ -52,7 +56,10 @@ const CytoscapeComponent = ({
     initializeEntities,
     initializeEdges,
     destroyGraph,
-    showFilter
+    showFilter,
+    isOpenInfoEntityModal,
+    onCancelInfoEntityModal,
+    nodeEntityInfo
 }: CytoscapeComponentProps) => {
     const nodes = elements.nodes;
     const edges = elements.edges;
@@ -104,6 +111,11 @@ const CytoscapeComponent = ({
                     {tooltip.content}
                 </div>
             )}
+            <InfoEntityModal
+                isOpen={isOpenInfoEntityModal}
+                onCancel={onCancelInfoEntityModal}
+                nodeEntityInfo={nodeEntityInfo}
+            />
         </>
     );
 };

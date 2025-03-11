@@ -28,10 +28,12 @@ export const STYLE: Stylesheet[] = [
         selector: 'edge',
         style: {
             'label': 'data(label)',
+            'line-color': '#666',
             'font-weight': 'bold',
             'font-size': '30px',
             'curve-style': 'taxi',
             'target-arrow-shape': 'triangle',
+            'target-arrow-color': '#666',
             'arrow-scale': 3
         }
     }

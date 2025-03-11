@@ -6,6 +6,7 @@ import { Button } from '@consta/uikit/Button';
 import { IconClose } from '@consta/icons/IconClose';
 import { useGetData } from '../hooks/useGetData.tsx';
 import AttributesOfEntityTable from './AttributesOfEntityTable.tsx';
+import InfoRelationTable from "./InfoRelationTable.tsx";
 
 export interface InfoEntityModalProps {
     isOpen: ReturnType<typeof useGetData>['isOpenInfoEntityModal'];
@@ -35,7 +36,7 @@ export const InfoEntityModal = ({
             style={{
                 right: '10px',
                 height: '100%',
-                width: '550px',
+                width: '600px',
                 boxShadow: '0 0 10px 10px rgba(0, 0, 0, 0.125)',
             }}
             onEsc={onCancel}
@@ -129,6 +130,35 @@ export const InfoEntityModal = ({
                                     nodeEntityInfo.data().attributes
                                 }
                             />
+                        </Layout>
+
+                        {/** Связи с другими сущностями */}
+                        <Layout
+                            direction="column"
+                            className={cnMixSpace({ mT: 'xs' })}
+                        >
+                            <Text>Связь с другими сущностями:</Text>
+
+                            <Layout
+                                direction="column"
+                                className={cnMixSpace({ mT: 'xs' })}
+                                style={{
+                                    border: '1px solid lightgray',
+                                }}
+                            >
+                                <InfoRelationTable
+                                    sources={
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                        // @ts-expect-error
+                                        nodeEntityInfo.data().sources
+                                    }
+                                    targets={
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                        // @ts-expect-error
+                                        nodeEntityInfo.data().targets
+                                    }
+                                />
+                            </Layout>
                         </Layout>
                     </Layout>
                 )}

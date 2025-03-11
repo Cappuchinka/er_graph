@@ -88,6 +88,8 @@ export const useGetData = () => {
                                     'attributes': node.data.attributes,
                                     'isShow': node.data.isShow,
                                     'color': node.data.color ? node.data.color : '#FFFFFF',
+                                    'sources': node.data.sources,
+                                    'targets': node.data.targets,
                                     'dom': div,
                                 },
                                 'classes': String(node.classes),

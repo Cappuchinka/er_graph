@@ -208,6 +208,7 @@ export const Toolbar = ({
                         }}
                     >
                         <TextField
+                            disabled={elements.nodes.length === 0}
                             form="defaultClear"
                             placeholder="Введите сущности"
                             type="textarea"
@@ -218,6 +219,7 @@ export const Toolbar = ({
                             // rows={4}
                         />
                         <Button
+                            disabled={elements.nodes.length === 0}
                             form="brickDefault"
                             label="Поиск"
                             onClick={() => {

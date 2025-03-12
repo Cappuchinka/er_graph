@@ -102,7 +102,9 @@ const formatter: {
                     label: entity.name.toUpperCase(),
                     color: entity.color,
                     attributes: columnsOfEntity,
-                    isShow: true
+                    isShow: true,
+                    sources: edges.filter((edge) => edge.data.sourceTable === entity.name.toUpperCase()),
+                    targets: edges.filter((edge) => edge.data.targetTable === entity.name.toUpperCase()),
                 },
                 classes: Classes.ENTITY,
                 grabbable: true

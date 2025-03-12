@@ -74,8 +74,9 @@ export const InfoRelationTable = ({
                         <Layout
                             direction="column"
                         >
-                            <Text>{`Таблица: ${record.data.sourceTable}`}</Text>
+                            <Text>{`Из: ${record.data.sourceTable}`}</Text>
                             <Text>{`Поля: ${record.data.targetField} <- ${record.data.sourceField}`}</Text>
+                            <Text>{`Тип связи: ${record.data.type}`}</Text>
                         </Layout>
                     ) : (
                         <Layout
@@ -101,8 +102,9 @@ export const InfoRelationTable = ({
                         <Layout
                             direction="column"
                         >
-                            <Text>{`Таблица: ${record.data.targetTable}`}</Text>
+                            <Text>{`В: ${record.data.targetTable}`}</Text>
                             <Text>{`Поля: ${record.data.sourceField} -> ${record.data.targetField}`}</Text>
+                            <Text>{`Тип связи: ${record.data.type}`}</Text>
                         </Layout>
                     ): (
                         <Layout

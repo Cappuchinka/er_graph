@@ -239,8 +239,9 @@ export const useGetData = () => {
                 }
             };
             reader.readAsText(jsonFile);
+            onCancelInfoEntityModal();
         }
-    }, [JSONToElementFormatter]);
+    }, [JSONToElementFormatter, onCancelInfoEntityModal]);
 
     const handleTemplateFileUpload = useCallback(() => {
         const templateFileInput = document.getElementById('templateFileInput') as HTMLInputElement;

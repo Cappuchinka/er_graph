@@ -3,7 +3,7 @@ import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
 import CytoscapeComponent from '../components/CytoscapeComponents/CytoscapeComponent.tsx';
 import Toolbar from '../components/Toolbar.tsx';
 import { useGetData } from '../hooks/useGetData.tsx';
-import {useState} from "react";
+import { useState } from 'react';
 
 export const ERDiagramPage = () => {
     const {
@@ -19,8 +19,8 @@ export const ERDiagramPage = () => {
         isOpenDownloadJSONModal,
         downloadFileName,
         setDownloadFileName,
-        onOpen,
-        onCancel,
+        onOpenDownloadJSON,
+        onCancelDownloadJSON,
         onAccept,
         isWithTemplate,
         template,
@@ -30,7 +30,10 @@ export const ERDiagramPage = () => {
         handleCheckbox,
         entitiesStroke,
         setEntitiesStroke,
-        handleFiltration
+        handleFiltration,
+        isOpenInfoEntityModal,
+        onCancelInfoEntityModal,
+        nodeEntityInfo
     } = useGetData();
 
     const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -50,8 +53,8 @@ export const ERDiagramPage = () => {
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
                 isOpenDownloadJSONModal={isOpenDownloadJSONModal}
-                onOpen={onOpen}
-                onCancel={onCancel}
+                onOpenDownloadJSON={onOpenDownloadJSON}
+                onCancelDownloadJSON={onCancelDownloadJSON}
                 onAccept={onAccept}
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}
@@ -78,6 +81,9 @@ export const ERDiagramPage = () => {
                 initializeEdges={initializeEdges}
                 destroyGraph={destroyGraph}
                 showFilter={showFilter}
+                isOpenInfoEntityModal={isOpenInfoEntityModal}
+                onCancelInfoEntityModal={onCancelInfoEntityModal}
+                nodeEntityInfo={nodeEntityInfo}
             />
         </Layout>
     );

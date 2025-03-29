@@ -30,3 +30,8 @@ export interface Entity extends NodeDefinition {
 }
 
 export interface Edge extends EdgeDefinition {}
+
+export interface InfoRelation {
+    sources: EdgeDefinition | null;
+    targets: EdgeDefinition | null;
+}

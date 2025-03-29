@@ -16,8 +16,8 @@ export interface ToolbarProps {
     downloadFileName: ReturnType<typeof useGetData>['downloadFileName'];
     setDownloadFileName: ReturnType<typeof useGetData>['setDownloadFileName'];
     isOpenDownloadJSONModal: ReturnType<typeof useGetData>['isOpenDownloadJSONModal'];
-    onOpen: ReturnType<typeof useGetData>['onOpen'];
-    onCancel: ReturnType<typeof useGetData>['onCancel'];
+    onOpenDownloadJSON: ReturnType<typeof useGetData>['onOpenDownloadJSON'];
+    onCancelDownloadJSON: ReturnType<typeof useGetData>['onCancelDownloadJSON'];
     onAccept: ReturnType<typeof useGetData>['onAccept'];
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
@@ -37,8 +37,8 @@ export const Toolbar = ({
     downloadFileName,
     setDownloadFileName,
     isOpenDownloadJSONModal,
-    onOpen,
-    onCancel,
+    onOpenDownloadJSON,
+    onCancelDownloadJSON,
     onAccept,
     isTemplateLoaded,
     fileJSONName,
@@ -180,7 +180,7 @@ export const Toolbar = ({
                             view="secondary"
                             className={cnMixSpace({ mL: 's' })}
                             label="Скачать JSON"
-                            onClick={onOpen}
+                            onClick={onOpenDownloadJSON}
                         />
                     </Layout>
 
@@ -220,6 +220,7 @@ export const Toolbar = ({
                         }}
                     >
                         <TextField
+                            disabled={elements.nodes.length === 0}
                             form="defaultClear"
                             placeholder="Введите сущности"
                             type="textarea"
@@ -230,6 +231,7 @@ export const Toolbar = ({
                             // rows={4}
                         />
                         <Button
+                            disabled={elements.nodes.length === 0}
                             form="brickDefault"
                             label="Поиск"
                             onClick={() => {
@@ -270,7 +272,7 @@ export const Toolbar = ({
                 isOpen={isOpenDownloadJSONModal}
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
-                onCancel={onCancel}
+                onCancel={onCancelDownloadJSON}
                 onAccept={onAccept}
             />
         </>

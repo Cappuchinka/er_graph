@@ -5,15 +5,13 @@ import { Button } from '@consta/uikit/Button';
 import { useGetData } from '../hooks/useGetData.ts';
 import { cnMixSpace } from '@consta/uikit/MixSpace';
 import DownloadJSONModal from './DownloadJSONModal.tsx';
-import { Switch } from '@consta/uikit/Switch';
 import EntitiesList from './EntitiesList.tsx';
 import { TextField } from '@consta/uikit/TextField';
 import React from 'react';
 import { IconDown } from '@consta/icons/IconDown';
 
 export interface ToolbarProps {
-    handleJSONFileUpload: ReturnType<typeof useGetData>['handleJSONFileUpload'];
-    handleTemplateFileUpload: ReturnType<typeof useGetData>['handleTemplateFileUpload'];
+    handleFileUpload: ReturnType<typeof useGetData>['handleFileUpload'];
     updateFlag: ReturnType<typeof useGetData>['updateFlag'];
     downloadFileName: ReturnType<typeof useGetData>['downloadFileName'];
     setDownloadFileName: ReturnType<typeof useGetData>['setDownloadFileName'];
@@ -21,8 +19,6 @@ export interface ToolbarProps {
     onOpenDownloadJSON: ReturnType<typeof useGetData>['onOpenDownloadJSON'];
     onCancelDownloadJSON: ReturnType<typeof useGetData>['onCancelDownloadJSON'];
     onAccept: ReturnType<typeof useGetData>['onAccept'];
-    isWithTemplate: ReturnType<typeof useGetData>['isWithTemplate'];
-    handleSwitch: ReturnType<typeof useGetData>['handleSwitch'];
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
     fileTemplateName: ReturnType<typeof useGetData>['fileTemplateName'];
@@ -36,8 +32,7 @@ export interface ToolbarProps {
 }
 
 export const Toolbar = ({
-    handleJSONFileUpload,
-    handleTemplateFileUpload,
+    handleFileUpload,
     updateFlag,
     downloadFileName,
     setDownloadFileName,
@@ -45,8 +40,6 @@ export const Toolbar = ({
     onOpenDownloadJSON,
     onCancelDownloadJSON,
     onAccept,
-    isWithTemplate,
-    handleSwitch,
     isTemplateLoaded,
     fileJSONName,
     fileTemplateName,
@@ -109,9 +102,27 @@ export const Toolbar = ({
                         direction="row"
                     >
                         <FileField
+                            id="fileInput"
+                            accept=" .json, .template"
+                            onChange={handleFileUpload}
+                            multiple={true}
+                        >
+                            {(props) => {
+                                return (
+                                    <Button
+                                        {...props}
+                                        label="Загрузить диаграмму"
+                                    />
+                                );
+                            }}
+                        </FileField>
+
+                        {/*
+                        <FileField
                             id="jsonFileInput"
                             accept="application/json"
                             onChange={handleJSONFileUpload}
+                            className={cnMixSpace({ mL: 's' })}
                         >
                             {(props) => {
                                 return (
@@ -162,6 +173,7 @@ export const Toolbar = ({
                                 className={cnMixSpace({ mL: 'xs' })}
                             />
                         </Layout>
+                        */}
 
                         <Button
                             disabled={!updateFlag}

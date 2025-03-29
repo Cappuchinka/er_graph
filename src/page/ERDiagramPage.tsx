@@ -14,8 +14,7 @@ export const ERDiagramPage = () => {
         initializeEntities,
         initializeEdges,
         destroyGraph,
-        handleJSONFileUpload,
-        handleTemplateFileUpload,
+        handleFileUpload,
         updateFlag,
         isOpenDownloadJSONModal,
         downloadFileName,
@@ -24,7 +23,6 @@ export const ERDiagramPage = () => {
         onCancel,
         onAccept,
         isWithTemplate,
-        handleSwitch,
         template,
         isTemplateLoaded,
         fileJSONName,
@@ -47,8 +45,7 @@ export const ERDiagramPage = () => {
             }}
         >
             <Toolbar
-                handleJSONFileUpload={handleJSONFileUpload}
-                handleTemplateFileUpload={handleTemplateFileUpload}
+                handleFileUpload={handleFileUpload}
                 updateFlag={updateFlag}
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
@@ -56,8 +53,6 @@ export const ERDiagramPage = () => {
                 onOpen={onOpen}
                 onCancel={onCancel}
                 onAccept={onAccept}
-                isWithTemplate={isWithTemplate}
-                handleSwitch={handleSwitch}
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}
                 fileTemplateName={fileTemplateName}

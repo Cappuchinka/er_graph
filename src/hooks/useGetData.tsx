@@ -183,48 +183,92 @@ export const useGetData = () => {
         };
     }, []);
 
-    const handleJSONFileUpload = useCallback(() => {
-        const jsonFileInput = document.getElementById('jsonFileInput') as HTMLInputElement;
-        if (jsonFileInput.files && jsonFileInput.files.length > 0) {
-            const jsonFile = jsonFileInput.files[0];
-            setFileJSONName(jsonFile.name);
-            setTemplate([]);
-            setIsTemplateLoaded(false);
-            setIsWithTemplate(false);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target?.result as string;
-                try {
-                    const parsedElements = JSON.parse(content);
-                    setElements(JSONToElementFormatter(parsedElements));
-                    setUpdateFlag(true);
-                } catch (error) {
-                    console.error('Ошибка при парсинге JSON:', error);
+    const handleFileUpload = useCallback(() => {
+        const filesInput = document.getElementById('fileInput') as HTMLInputElement;
+        if (filesInput.files && filesInput.files.length > 0) {
+            if (filesInput.files.length == 1) {
+                const file = filesInput.files[0];
+                if (file.type === 'application/json') {
+                    setFileJSONName(file.name);
+                    setTemplate([]);
+                    setIsTemplateLoaded(false);
+                    setIsWithTemplate(false);
+                    setIsTemplateLoaded(false);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const content = e.target?.result as string;
+                        try {
+                            const parsedElements = JSON.parse(content);
+                            setElements(JSONToElementFormatter(parsedElements));
+                            setUpdateFlag(true);
+                        } catch (error) {
+                            console.error('Ошибка при парсинге JSON:', error);
+                        }
+                    };
+                    reader.readAsText(file);
+                } else {
+                    if (fileJSONName) {
+                        setFileTemplateName(file.name);
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const content = e.target?.result as string;
+                            try {
+                                const parsedElements = JSON.parse(content);
+                                setTemplate(parsedElements);
+                                setIsTemplateLoaded(true);
+                                setIsWithTemplate(true);
+                            } catch (error) {
+                                console.error('Ошибка при парсинге JSON:', error);
+                            }
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        return
+                    }
                 }
-            };
-            reader.readAsText(jsonFile);
-        }
-    }, [JSONToElementFormatter]);
-
-    const handleTemplateFileUpload = useCallback(() => {
-        const templateFileInput = document.getElementById('templateFileInput') as HTMLInputElement;
-        if (templateFileInput.files && templateFileInput.files.length > 0) {
-            const templateFile = templateFileInput.files[0];
-            setFileTemplateName(templateFile.name);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target?.result as string;
-                try {
-                    const parsedElements = JSON.parse(content);
-                    setTemplate(parsedElements);
-                    setIsTemplateLoaded(true);
-                } catch (error) {
-                    console.error('Ошибка при парсинге JSON:', error);
+            } else {
+                for (let i = 0; i < filesInput.files.length; i++) {
+                    switch (filesInput.files[i].type) {
+                        case 'application/json': {
+                            setFileJSONName(filesInput.files[i].name);
+                            setTemplate([]);
+                            setIsTemplateLoaded(false);
+                            setIsWithTemplate(false);
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const content = e.target?.result as string;
+                                try {
+                                    const parsedElements = JSON.parse(content);
+                                    setElements(JSONToElementFormatter(parsedElements));
+                                    setUpdateFlag(true);
+                                } catch (error) {
+                                    console.error('Ошибка при парсинге JSON:', error);
+                                }
+                            };
+                            reader.readAsText(filesInput.files[i]);
+                            break;
+                        }
+                        default: {
+                            setFileTemplateName(filesInput.files[i].name);
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const content = e.target?.result as string;
+                                try {
+                                    const parsedElements = JSON.parse(content);
+                                    setTemplate(parsedElements);
+                                    setIsTemplateLoaded(true);
+                                    setIsWithTemplate(true);
+                                } catch (error) {
+                                    console.error('Ошибка при парсинге JSON:', error);
+                                }
+                            };
+                            reader.readAsText(filesInput.files[i]);
+                        }
+                    }
                 }
-            };
-            reader.readAsText(templateFile);
+            }
         }
-    }, []);
+    }, [JSONToElementFormatter, fileJSONName]);
 
     const handleJSONDownload = useCallback(() => {
         if (cyRef.current) {
@@ -376,8 +420,7 @@ export const useGetData = () => {
         initializeEntities,
         initializeEdges,
         destroyGraph,
-        handleJSONFileUpload,
-        handleTemplateFileUpload,
+        handleFileUpload,
         handleJSONDownload,
         updateFlag,
         isOpenDownloadJSONModal,

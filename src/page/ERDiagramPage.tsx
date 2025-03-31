@@ -17,10 +17,12 @@ export const ERDiagramPage = () => {
         handleFileUpload,
         updateFlag,
         isOpenDownloadJSONModal,
+        isOpenDownloadPDFModal,
         downloadFileName,
         setDownloadFileName,
-        onOpenDownloadJSON,
-        onCancelDownloadJSON,
+        onOpenJSONDownloadModal,
+        onOpenPDFDownloadModal,
+        onCancel,
         onAccept,
         isWithTemplate,
         template,
@@ -53,8 +55,10 @@ export const ERDiagramPage = () => {
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
                 isOpenDownloadJSONModal={isOpenDownloadJSONModal}
-                onOpenDownloadJSON={onOpenDownloadJSON}
-                onCancelDownloadJSON={onCancelDownloadJSON}
+                isOpenDownloadPDFModal={isOpenDownloadPDFModal}
+                onOpenJSONDownloadModal={onOpenJSONDownloadModal}
+                onOpenPDFDownloadModal={onOpenPDFDownloadModal}
+                onCancel={onCancel}
                 onAccept={onAccept}
                 isTemplateLoaded={isTemplateLoaded}
                 fileJSONName={fileJSONName}

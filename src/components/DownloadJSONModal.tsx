@@ -7,7 +7,7 @@ import { cnMixSpace } from '@consta/uikit/MixSpace';
 import { Button } from '@consta/uikit/Button';
 
 export interface DownloadJSONModalProps {
-    isOpen: ReturnType<typeof useGetData>['isOpenDownloadJSONModal'];
+    isOpen: boolean;
     downloadFileName: ReturnType<typeof useGetData>['downloadFileName'];
     setDownloadFileName: ReturnType<typeof useGetData>['setDownloadFileName'];
     onCancel: () => void;

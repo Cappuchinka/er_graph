@@ -7,6 +7,8 @@ import CytoscapeEntityComponent from '../components/CytoscapeComponents/Cytoscap
 import { createRoot } from 'react-dom/client';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
 import EdgeHintComponent from '../components/EdgeHintComponent.tsx';
+import html2canvas from 'html2canvas';
+import {jsPDF, jsPDFOptions} from 'jspdf';
 
 export const useGetData = () => {
     const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
@@ -20,6 +22,7 @@ export const useGetData = () => {
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const [isOpenDownloadJSONModal, setIsOpenDownloadJSONModal] = useState<boolean>(false);
+    const [isOpenDownloadPDFModal, setIsOpenDownloadPDFModal] = useState<boolean>(false);
     const [downloadFileName, setDownloadFileName] = useState<string | null>(null);
     const [fileJSONName, setFileJSONName] = useState<string | null>(null);
     const [fileTemplateName, setFileTemplateName] = useState<string | null>(null);
@@ -344,24 +347,82 @@ export const useGetData = () => {
         }
     }, [ElementToJSONFormatter, downloadFileName, elements, getPositionForEntity]);
 
+    const handlePDFDownload = useCallback(async () => {
+        const element = document.getElementById("content");
+
+        if (!element) return;
+
+        const originalOverflow = element.style.overflow;
+        const originalHeight = element.style.height;
+        element.style.overflow = 'visible';
+        element.style.height = 'auto';
+
+        const opt = {
+            margin: 0,
+            filename: `${downloadFileName}.pdf`,
+            image: { type: 'svg', quality: 100.00 },
+            html2canvas: { scale: 100 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'l' } as jsPDFOptions
+        };
+
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            width: element.scrollWidth,
+            height: element.scrollHeight,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            backgroundColor: '#FFFFFF'
+        });
+
+        element.style.overflow = originalOverflow;
+        element.style.height = originalHeight;
+
+        const imgData = canvas.toDataURL('image/' + opt.image.type, opt.image.quality);
+        const pdf = new jsPDF(opt.jsPDF);
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, opt.image.type, opt.margin, opt.margin, pdfWidth, pdfHeight);
+        pdf.save(opt.filename);
+    }, [downloadFileName]);
+
     const handleSwitch = useCallback(() => {
         setIsWithTemplate(!isWithTemplate)
     }, [isWithTemplate]);
 
-    const onOpenDownloadJSON = useCallback(() => {
+    const onOpenJSONDownloadModal = useCallback(() => {
         setDownloadFileName(null);
         setIsOpenDownloadJSONModal(true);
     }, []);
 
-    const onCancelDownloadJSON = useCallback(() => {
+    const onOpenPDFDownloadModal = useCallback(() => {
         setDownloadFileName(null);
-        setIsOpenDownloadJSONModal(false);
+        setIsOpenDownloadPDFModal(true);
     }, []);
 
+    const onCancel = useCallback(() => {
+        setDownloadFileName(null);
+        if (isOpenDownloadJSONModal) {
+            setIsOpenDownloadJSONModal(false);
+        } else if (isOpenDownloadPDFModal) {
+            setIsOpenDownloadPDFModal(false);
+        }
+    }, [isOpenDownloadJSONModal, isOpenDownloadPDFModal]);
+
     const onAccept = useCallback(() => {
-        handleJSONDownload();
-        onCancelDownloadJSON();
-    }, [handleJSONDownload, onCancelDownloadJSON]);
+        if (isOpenDownloadJSONModal) {
+            handleJSONDownload();
+        } else if (isOpenDownloadPDFModal) {
+            void handlePDFDownload();
+        }
+        onCancel();
+    }, [handleJSONDownload, handlePDFDownload, isOpenDownloadJSONModal, isOpenDownloadPDFModal, onCancel]);
 
     const checkExistNodeForFiltration = useCallback((localNodes:NodeDefinition[], item: NodeDefinition, edge: EdgeDefinition) => {
         return (
@@ -460,12 +521,15 @@ export const useGetData = () => {
         destroyGraph,
         handleFileUpload,
         handleJSONDownload,
+        handlePDFDownload,
         updateFlag,
         isOpenDownloadJSONModal,
+        isOpenDownloadPDFModal,
         downloadFileName,
         setDownloadFileName,
-        onOpenDownloadJSON,
-        onCancelDownloadJSON,
+        onOpenJSONDownloadModal,
+        onOpenPDFDownloadModal,
+        onCancel,
         onAccept,
         isWithTemplate,
         handleSwitch,

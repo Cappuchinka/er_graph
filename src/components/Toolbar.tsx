@@ -9,6 +9,7 @@ import EntitiesList from './EntitiesList.tsx';
 import { TextField } from '@consta/uikit/TextField';
 import React from 'react';
 import { IconDown } from '@consta/icons/IconDown';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 
 export interface ToolbarProps {
     handleFileUpload: ReturnType<typeof useGetData>['handleFileUpload'];
@@ -16,8 +17,10 @@ export interface ToolbarProps {
     downloadFileName: ReturnType<typeof useGetData>['downloadFileName'];
     setDownloadFileName: ReturnType<typeof useGetData>['setDownloadFileName'];
     isOpenDownloadJSONModal: ReturnType<typeof useGetData>['isOpenDownloadJSONModal'];
-    onOpenDownloadJSON: ReturnType<typeof useGetData>['onOpenDownloadJSON'];
-    onCancelDownloadJSON: ReturnType<typeof useGetData>['onCancelDownloadJSON'];
+    isOpenDownloadPDFModal: ReturnType<typeof useGetData>['isOpenDownloadPDFModal'];
+    onOpenJSONDownloadModal: ReturnType<typeof useGetData>['onOpenJSONDownloadModal'];
+    onOpenPDFDownloadModal: ReturnType<typeof useGetData>['onOpenPDFDownloadModal'];
+    onCancel: ReturnType<typeof useGetData>['onCancel'];
     onAccept: ReturnType<typeof useGetData>['onAccept'];
     isTemplateLoaded: ReturnType<typeof useGetData>['isTemplateLoaded'];
     fileJSONName: ReturnType<typeof useGetData>['fileJSONName'];
@@ -37,8 +40,10 @@ export const Toolbar = ({
     downloadFileName,
     setDownloadFileName,
     isOpenDownloadJSONModal,
-    onOpenDownloadJSON,
-    onCancelDownloadJSON,
+    isOpenDownloadPDFModal,
+    onOpenJSONDownloadModal,
+    onOpenPDFDownloadModal,
+    onCancel,
     onAccept,
     isTemplateLoaded,
     fileJSONName,
@@ -57,6 +62,24 @@ export const Toolbar = ({
             <IconDown
                 size="s"
                 style={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            />
+        );
+    };
+
+    const IconUploadButton = () => {
+        return (
+            <UploadOutlined
+                size={16}
+                className={cnMixSpace({ mR: 'xs' })}
+            />
+        );
+    };
+
+    const IconDownloadButton = () => {
+        return (
+            <DownloadOutlined
+                size={16}
+                className={cnMixSpace({ mR: 'xs' })}
             />
         );
     };
@@ -89,157 +112,118 @@ export const Toolbar = ({
                     </Text>
                 </Layout>
 
-                {/** Buttons */}
                 <Layout
-                    direction="row"
-                    className={cnMixSpace({ mT: '2xs' })}
+                    direction="column"
                     style={{
-                        alignItems: 'center',
                         width: 'max-content'
                     }}
                 >
+                    {/** Buttons */}
                     <Layout
                         direction="row"
-                    >
-                        <FileField
-                            id="fileInput"
-                            accept=" .json, .template"
-                            onChange={handleFileUpload}
-                            multiple={true}
-                        >
-                            {(props) => {
-                                return (
-                                    <Button
-                                        {...props}
-                                        label="Загрузить диаграмму"
-                                    />
-                                );
-                            }}
-                        </FileField>
-
-                        {/*
-                        <FileField
-                            id="jsonFileInput"
-                            accept="application/json"
-                            onChange={handleJSONFileUpload}
-                            className={cnMixSpace({ mL: 's' })}
-                        >
-                            {(props) => {
-                                return (
-                                    <Button
-                                        {...props}
-                                        label="Загрузить JSON"
-                                    />
-                                );
-                            }}
-                        </FileField>
-
-                        <FileField
-                            id="templateFileInput"
-                            accept=".template"
-                            disabled={!isWithTemplate}
-                            onChange={handleTemplateFileUpload}
-                            className={cnMixSpace({ mL: 's' })}
-                        >
-                            {(props) => {
-                                return (
-                                    <Button
-                                        {...props}
-                                        view={isWithTemplate ? 'primary' : 'ghost'}
-                                        style={{ cursor: isWithTemplate ? 'pointer' : 'not-allowed' }}
-                                        label="Загрузить Шаблон"
-                                    />
-                                );
-                            }}
-                        </FileField>
-
-                        <Layout
-                            direction="row"
-                            style={{
-                                alignItems: 'center',
-                            }}
-                            className={cnMixSpace({ mL: 's' })}
-                        >
-                            <Text
-                                size="l"
-                            >
-                                Шаблон
-                            </Text>
-
-                            <Switch
-                                size="l"
-                                checked={isWithTemplate}
-                                onChange={handleSwitch}
-                                className={cnMixSpace({ mL: 'xs' })}
-                            />
-                        </Layout>
-                        */}
-
-                        <Button
-                            disabled={!updateFlag}
-                            view="secondary"
-                            className={cnMixSpace({ mL: 's' })}
-                            label="Скачать JSON"
-                            onClick={onOpenDownloadJSON}
-                        />
-                    </Layout>
-
-                    {/** Filtration */}
-                    <Layout
-                        direction="row"
-                        className={cnMixSpace({ mL: 's' })}
-                    >
-                        <EntitiesList
-                            elements={elements}
-                            handleCheckbox={handleCheckbox}
-                        />
-                    </Layout>
-
-                    {/** Show Filter */}
-                    <Layout
-                        direction="row"
-                        className={cnMixSpace({ mL: 's' })}
-                    >
-                        <Button
-                            iconLeft={IconDownButton}
-                            view="secondary"
-                            onClick={() => {
-                                setShowFilter(!showFilter);
-                            }}
-                        />
-                    </Layout>
-                </Layout>
-
-                {/** New Filtration */}
-                {showFilter && (
-                    <Layout
-                        direction="row"
-                        className={cnMixSpace({ mT: 's' })}
+                        className={cnMixSpace({ mT: '2xs' })}
                         style={{
-                            width: '45%'
+                            alignItems: 'center',
+                            width: 'max-content'
                         }}
                     >
-                        <TextField
-                            disabled={elements.nodes.length === 0}
-                            form="defaultClear"
-                            placeholder="Введите сущности"
-                            type="textarea"
-                            value={entitiesStroke}
-                            onChange={(value) => {
-                                setEntitiesStroke(value);
-                            }}
-                            // rows={4}
-                        />
-                        <Button
-                            disabled={elements.nodes.length === 0}
-                            form="brickDefault"
-                            label="Поиск"
-                            onClick={() => {
-                                handleFiltration();
-                            }}
-                        />
+                        <Layout
+                            direction="row"
+                        >
+                            <FileField
+                                id="fileInput"
+                                accept=" .json, .template"
+                                onChange={handleFileUpload}
+                                multiple={true}
+                            >
+                                {(props) => {
+                                    return (
+                                        <Button
+                                            {...props}
+                                            label="Загрузить диаграмму"
+                                            iconLeft={IconUploadButton}
+                                        />
+                                    );
+                                }}
+                            </FileField>
+
+                            <Button
+                                disabled={!updateFlag}
+                                view="secondary"
+                                className={cnMixSpace({ mL: 's' })}
+                                label="Скачать JSON"
+                                iconLeft={IconDownloadButton}
+                                onClick={onOpenJSONDownloadModal}
+                            />
+
+                            <Button
+                                disabled={!updateFlag}
+                                view="secondary"
+                                className={cnMixSpace({ mL: 's' })}
+                                label="Скачать PDF"
+                                iconLeft={IconDownloadButton}
+                                onClick={onOpenPDFDownloadModal}
+                            />
+                        </Layout>
+
+                        {/** Filtration */}
+                        <Layout
+                            direction="row"
+                            className={cnMixSpace({ mL: 's' })}
+                        >
+                            <EntitiesList
+                                elements={elements}
+                                handleCheckbox={handleCheckbox}
+                            />
+                        </Layout>
+
+                        {/** Show Filter */}
+                        <Layout
+                            direction="row"
+                            className={cnMixSpace({ mL: 's' })}
+                        >
+                            <Button
+                                title="Фильтрация по перечисленному списку"
+                                iconLeft={IconDownButton}
+                                view="secondary"
+                                onClick={() => {
+                                    setShowFilter(!showFilter);
+                                }}
+                            />
+                        </Layout>
                     </Layout>
-                )}
+
+                    {/** New Filtration */}
+                    {showFilter && (
+                        <Layout
+                            direction="row"
+                            className={cnMixSpace({ mT: 's' })}
+                            style={{
+                                width: '100%'
+                            }}
+                        >
+                            <TextField
+                                disabled={elements.nodes.length === 0}
+                                form="defaultClear"
+                                placeholder="Введите сущности"
+                                type="textarea"
+                                value={entitiesStroke}
+                                onChange={(value) => {
+                                    setEntitiesStroke(value);
+                                }}
+                                maxRows={1}
+                            />
+                            <Button
+                                disabled={elements.nodes.length === 0}
+                                form="brickDefault"
+                                label="Поиск"
+                                onClick={() => {
+                                    handleFiltration();
+                                }}
+                            />
+                        </Layout>
+                    )}
+                </Layout>
 
                 {/** Название файлов */}
                 <Layout
@@ -269,10 +253,10 @@ export const Toolbar = ({
             </Layout>
 
             <DownloadJSONModal
-                isOpen={isOpenDownloadJSONModal}
+                isOpen={isOpenDownloadJSONModal || isOpenDownloadPDFModal}
                 downloadFileName={downloadFileName}
                 setDownloadFileName={setDownloadFileName}
-                onCancel={onCancelDownloadJSON}
+                onCancel={onCancel}
                 onAccept={onAccept}
             />
         </>

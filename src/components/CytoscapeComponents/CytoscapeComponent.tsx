@@ -83,14 +83,19 @@ const CytoscapeComponent = ({
         destroyGraph();
     }, [cyRef, destroyGraph, edges]);
 
+    const getHeight = () => {
+        return (showFilter && isWithTemplate) ? '78vh' : (showFilter && !isWithTemplate) ? '81vh' : (!showFilter && isWithTemplate) ? '84vh' : '87vh';
+    }
+
     return (
         <>
             <div
+                id="content"
                 ref={containerRef}
                 style={{
                     display: 'block',
                     width: showFilter ? '100vw' : '100vw',
-                    height: showFilter ? '81vh' : '87vh'
+                    height: getHeight()
                 }}
                 className={cnMixSpace({ m: 0, p: 0 })}
             />

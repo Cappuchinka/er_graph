@@ -35,7 +35,8 @@ export const ERDiagramPage = () => {
         handleFiltration,
         isOpenInfoEntityModal,
         onCancelInfoEntityModal,
-        nodeEntityInfo
+        nodeEntityInfo,
+        handleGetServerData
     } = useGetData();
 
     const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -70,6 +71,7 @@ export const ERDiagramPage = () => {
                 handleFiltration={handleFiltration}
                 showFilter={showFilter}
                 setShowFilter={setShowFilter}
+                handleGetServerData={handleGetServerData}
             />
             <CytoscapeComponent
                 cyRef={cyRef}

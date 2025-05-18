@@ -9,7 +9,7 @@ import EntitiesList from './EntitiesList.tsx';
 import { TextField } from '@consta/uikit/TextField';
 import React from 'react';
 import { IconDown } from '@consta/icons/IconDown';
-import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { CloudDownloadOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 
 export interface ToolbarProps {
     handleFileUpload: ReturnType<typeof useGetData>['handleFileUpload'];
@@ -30,6 +30,7 @@ export interface ToolbarProps {
     entitiesStroke: ReturnType<typeof useGetData>['entitiesStroke'];
     setEntitiesStroke: ReturnType<typeof useGetData>['setEntitiesStroke'];
     handleFiltration: ReturnType<typeof useGetData>['handleFiltration'];
+    handleGetServerData: ReturnType<typeof useGetData>['handleGetServerData'];
     showFilter: boolean;
     setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -53,6 +54,7 @@ export const Toolbar = ({
     entitiesStroke,
     setEntitiesStroke,
     handleFiltration,
+    handleGetServerData,
     showFilter,
     setShowFilter,
 }: ToolbarProps) => {
@@ -83,6 +85,15 @@ export const Toolbar = ({
             />
         );
     };
+
+    const IconServerDataButton = () => {
+        return (
+            <CloudDownloadOutlined
+                size={16}
+                className={cnMixSpace({ mR: 'xs' })}
+            />
+        );
+    }
 
     return (
         <>
@@ -174,6 +185,21 @@ export const Toolbar = ({
                             <EntitiesList
                                 elements={elements}
                                 handleCheckbox={handleCheckbox}
+                            />
+                        </Layout>
+
+                        {/** Get server data */}
+                        <Layout
+                            direction="row"
+                            className={cnMixSpace({ mL: 's' })}
+                        >
+                            <Button
+                                label="Получение модели"
+                                view="primary"
+                                iconLeft={IconServerDataButton}
+                                onClick={() => {
+                                    handleGetServerData();
+                                }}
                             />
                         </Layout>
 

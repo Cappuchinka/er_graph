@@ -8,7 +8,8 @@ import { createRoot } from 'react-dom/client';
 import { LAYOUT, STYLE } from '../utils/coreSettings.ts';
 import EdgeHintComponent from '../components/EdgeHintComponent.tsx';
 import html2canvas from 'html2canvas';
-import {jsPDF, jsPDFOptions} from 'jspdf';
+import { jsPDF, jsPDFOptions } from 'jspdf';
+import DataService from '../services/DataService.ts';
 
 export const useGetData = () => {
     const { JSONToElementFormatter, ElementToJSONFormatter, getPositionForEntity } = useFormatter();
@@ -247,8 +248,9 @@ export const useGetData = () => {
                     reader.readAsText(file);
                     onCancelInfoEntityModal();
                 } else {
-                    if (fileJSONName) {
+                    if (elements || fileJSONName) {
                         setFileTemplateName(file.name);
+                        setFileJSONName(fileJSONName ?? `SERV_${file.name.split('.')[0]}`);
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             const content = e.target?.result as string;
@@ -511,6 +513,12 @@ export const useGetData = () => {
         }
     }, [checkExistNodeForFiltration, elements.edges, elements.nodes, entitiesStroke, removeDuplicatesById]);
 
+    const handleGetServerData = useCallback(async () => {
+        const content = await DataService.getERModel();
+        setElements(JSONToElementFormatter(content));
+        setUpdateFlag(true);
+    }, [JSONToElementFormatter]);
+
     return {
         elements,
         cyRef,
@@ -544,6 +552,7 @@ export const useGetData = () => {
         isOpenInfoEntityModal,
         onOpenInfoEntityModal,
         onCancelInfoEntityModal,
-        nodeEntityInfo
+        nodeEntityInfo,
+        handleGetServerData
     }
 };
